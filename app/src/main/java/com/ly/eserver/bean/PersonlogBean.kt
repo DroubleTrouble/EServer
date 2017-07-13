@@ -4,7 +4,7 @@ package com.ly.eserver.bean
 import java.util.Date
 
 data class PersonlogBean constructor(
-    val id: Int = 0, //主键
+    val personlogid: Int = 0, //主键
     val userid: Int = 0,        //用户表外键
     val projectid: Int = 0,    //项目表外键
     val department: String? = null,    //部门

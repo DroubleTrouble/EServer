@@ -1,6 +1,8 @@
 package com.ly.eserver.presenter
 
+import com.ly.eserver.bean.DataBean
 import com.ly.eserver.bean.GankIoDataBean
+import com.ly.eserver.bean.ProjectBean
 import com.ly.eserver.presenter.base.BaseView
 
 /**
@@ -8,10 +10,10 @@ import com.ly.eserver.presenter.base.BaseView
  */
 
 interface MainActivityPresenter {
-    interface View : BaseView<List<GankIoDataBean.ResultBean>>
+    interface View : BaseView<ProjectBean>
 
     interface Presenter {
-        fun fetchData(page: Int, pre_page: Int)
+        fun findProject(projectid: String)
     }
 }
 

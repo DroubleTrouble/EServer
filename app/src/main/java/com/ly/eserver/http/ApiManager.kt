@@ -1,5 +1,7 @@
 package com.ly.eserver.http
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.ly.eserver.http.service.EService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -34,12 +36,15 @@ class ApiManager private constructor() {
 
     val service: EService get() {
         if (mService == null) {
+            val gson :Gson = GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                    .create()
             val retrofit = Retrofit.Builder()
                     .client(getClient(OkHttpClient.Builder()))
                     .baseUrl(EService.Companion.API_URL)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build()
             mService = retrofit.create<EService>(EService::class.java)
         }
         return mService!!

@@ -3,7 +3,7 @@ package com.ly.eserver.bean
 import java.util.Date
 
 data class TaskBean constructor(
-    val id: Int = 0,                //主键
+    val taskid: Int = 0,                //主键
     val userid: Int = 0,            //工号
     val tableAddress: String? = null,//表地址
     val location: String? = null,    //定位，例：175.125

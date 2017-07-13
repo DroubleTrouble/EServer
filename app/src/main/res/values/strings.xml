@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">KotlinBase</string>
+    <string name="app_name">EServer</string>
+    <string name="userid">工号</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="old_pwd">原密码</string>
+    <string name="new_pwd">新密码</string>
+    <string name="config_pwd">密码确认</string>
+    <string name="forget_pwd">忘记密码？</string>
+    <string name="change_pwd">修改密码</string>
+    <string name="my_task">我的任务</string>
+    <string name="no_check">今日未签到</string>
+    <string name="check_in">今日已签到</string>
+    <string name="setting">设置</string>
 </resources>

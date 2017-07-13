@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="2.5"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/ll_changepwd_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0"
+        android:layout_weight="1"
+        android:background="@drawable/huge_bg">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1.5"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/colorGray">
+
+    <LinearLayout
+        android:layout_width="@dimen/dp_301"
+        android:layout_height="@dimen/dp_238"
+        android:weightSum="3"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            android:layout_weight="1"
+            android:background="@drawable/text_bg"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_16"
+                android:src="@drawable/password_icon" />
+
+            <EditText
+                android:id="@+id/et_changepwd_oldpwd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginRight="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_16"
+                android:background="@null"
+                android:hint="@string/old_pwd"
+                android:imeOptions="actionNext"
+                android:inputType="numberPassword"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:background="@drawable/text_bg">
+            <ImageView
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_16"
+                android:src="@drawable/password_icon" />
+
+            <EditText
+                android:id="@+id/et_changepwd_newpwd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginRight="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_16"
+                android:background="@null"
+                android:hint="@string/new_pwd"
+                android:imeOptions="actionNext"
+                android:inputType="numberPassword"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:background="@drawable/text_bg">
+            <ImageView
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_16"
+                android:src="@drawable/password_icon" />
+
+            <EditText
+                android:id="@+id/et_changepwd_configpwd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginRight="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_16"
+                android:background="@null"
+                android:hint="@string/config_pwd"
+                android:inputType="numberPassword"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
+        <ImageView
+            android:id="@+id/tv_changepwd_next"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/dp_58"
+            android:layout_height="@dimen/dp_58"
+            android:src="@drawable/next_step"/>
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

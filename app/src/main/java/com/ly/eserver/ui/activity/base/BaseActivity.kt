@@ -1,13 +1,18 @@
 package com.ly.eserver.ui.activity.base
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.view.WindowManager
 import com.ly.eserver.http.LifeSubscription
 import com.ly.eserver.http.Stateful
 import com.ly.eserver.widgets.LoadingPage
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import shinetechzz.com.vcleaders.presenter.base.BasePresenter
+
 
 /**
  * Created by zengwendi on 2017/6/12.
@@ -20,6 +25,12 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = Color.TRANSPARENT
+        }
         initData()
         mPresenter!!.attachView(this)
         mLoadingPage = object : LoadingPage(this) {
