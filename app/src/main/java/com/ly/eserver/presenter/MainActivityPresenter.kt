@@ -1,5 +1,6 @@
 package com.ly.eserver.presenter
 
+import android.support.v4.app.INotificationSideChannel
 import com.ly.eserver.bean.DataBean
 import com.ly.eserver.bean.GankIoDataBean
 import com.ly.eserver.bean.ProjectBean
@@ -13,7 +14,7 @@ interface MainActivityPresenter {
     interface View : BaseView<ProjectBean>
 
     interface Presenter {
-        fun findProject(projectid: String)
+        fun findProject(projectid: Int)
     }
 }
 

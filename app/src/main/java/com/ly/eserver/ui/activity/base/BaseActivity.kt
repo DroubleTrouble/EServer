@@ -1,36 +1,52 @@
 package com.ly.eserver.ui.activity.base
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
+import com.blankj.utilcode.util.ToastUtils
 import com.ly.eserver.http.LifeSubscription
 import com.ly.eserver.http.Stateful
 import com.ly.eserver.widgets.LoadingPage
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import org.jetbrains.anko.*
 import shinetechzz.com.vcleaders.presenter.base.BasePresenter
+import android.support.v4.content.ContextCompat
+import android.widget.Toast
+import com.ly.eserver.app.Constants
+import android.content.DialogInterface
+import android.support.annotation.NonNull
+import android.support.v7.app.AlertDialog
+import permissions.dispatcher.PermissionRequest
 
 
 /**
  * Created by zengwendi on 2017/6/12.
  */
 
-abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSubscription, Stateful {
+abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSubscription, Stateful ,AnkoLogger{
     val mCompositeDisposable: CompositeDisposable = CompositeDisposable()
     lateinit var mPresenter: T
     var mLoadingPage: LoadingPage? = null
 
+    val REQUEST_CONTACTS : Int = 200
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = Color.TRANSPARENT
-        }
+//        去除标题栏
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//            window.statusBarColor = Color.TRANSPARENT
+//        }
         initData()
         mPresenter!!.attachView(this)
         mLoadingPage = object : LoadingPage(this) {
@@ -98,4 +114,9 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
      * loadData()和initView只执行一次，如果有一些请求需要二次的不要放到loadData()里面。
      */
     abstract fun initView()
+
+
+    fun <K, V : Any> MutableMap<K, V?>.toVarargArray():
+            Array<out Pair<K, V>> =  map({ Pair(it.key, it.value!!) }).toTypedArray()
+
 }

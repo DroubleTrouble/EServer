@@ -13,7 +13,7 @@ import shinetechzz.com.vcleaders.presenter.base.BasePresenter
  * Created by zengwendi on 2017/6/12.
  */
 class MainActivityPresenterImpl : BasePresenter<MainActivityPresenter.View>(),MainActivityPresenter.Presenter,AnkoLogger {
-    override fun findProject(projectid: String) {
+    override fun findProject(projectid: Int) {
         val listener = object : HttpOnNextListener<ProjectBean>() {
             override fun onNext(t: Any) {
                 info("LoginActivityPresenterImpl->onNext")

@@ -11,9 +11,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    app:slideMode="both">
+    app:slideMode="left">
     <include layout="@layout/menu_left_profile" />
-    <include layout="@layout/menu_right_bluetooth" />
     <include layout="@layout/menu_content_home" />
 
 </com.jkb.slidemenu.SlideMenuLayout>

@@ -4,9 +4,9 @@ package com.ly.eserver.bean
 import java.util.Date
 
 data class PersonlogBean constructor(
-    val personlogid: Int = 0, //主键
-    val userid: Int = 0,        //用户表外键
-    val projectid: Int = 0,    //项目表外键
+    val personlogid: Int? = null, //主键
+    val userid: Int? = null,        //用户表外键
+    val projectid: Int? = null,    //项目表外键
     val department: String? = null,    //部门
     val area: String? = null,    //所在地
     val accommodation: Double? = null,    //住宿费

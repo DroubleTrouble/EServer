@@ -8,8 +8,24 @@
     <string name="config_pwd">密码确认</string>
     <string name="forget_pwd">忘记密码？</string>
     <string name="change_pwd">修改密码</string>
+    <string name="bind_phone">绑定手机</string>
+    <string name="verify_code">验证码</string>
+    <string name="bluetooth">蓝牙连接</string>
+    <string name="openbluetooth">开启蓝牙连接</string>
+    <string name="work_log">工作日志</string>
     <string name="my_task">我的任务</string>
     <string name="no_check">今日未签到</string>
     <string name="check_in">今日已签到</string>
     <string name="setting">设置</string>
+    <string name="baud_rate">波特率</string>
+    <string name="rate_28600">28600</string>
+    <string name="rate_9600">9600</string>
+    <string name="rate_11400">11400</string>
+    <string name="rate_3600">3600</string>
+    <string name="check_way">校验方式</string>
+    <string name="parity">奇偶</string>
+    <string name="crc">CRC</string>
+    <string name="redundancy">冗余</string>
+    <string name="rs3">RS3</string>
+    <string name="connect">连接设备</string>
 </resources>

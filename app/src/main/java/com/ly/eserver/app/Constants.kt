@@ -1,5 +1,7 @@
 package com.ly.eserver.app
 
+import android.Manifest
+
 /**
  * Created by zengwendi on 2017/6/12.
  */
@@ -14,6 +16,7 @@ interface Constants {
         val STATE_ERROR = 1004
         val STATE_EMPTY = 1005
         val STATE_SUCCESS = 1006
+        val CODE_CAMERA: String = Manifest.permission.CAMERA
     }
 }
 

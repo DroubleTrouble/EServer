@@ -1,7 +1,7 @@
 package com.ly.eserver.bean
 
 data class ProjectBean constructor(
-    val projectid: Int = 0,                //主键
+    val projectid: Int? = null,                //主键
     val area: String? = null,        //大区
     val province: String? = null,    //省份
     val city: String? = null,        //城市

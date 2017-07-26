@@ -26,7 +26,7 @@ interface EService {
     fun changePwd(@Body user :UserBean): Observable<DataBean<UserBean>>
 
     @GET("findprojectByid/{projectid}")
-    fun findProject(@Path("projectid") type: String):Observable<DataBean<ProjectBean>>
+    fun findProject(@Path("projectid") type: Int):Observable<DataBean<ProjectBean>>
     /**
      * 参数：operlogin
      * 例 http://localhost:8080/eserver/deleteOperlog/1
