@@ -1,178 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:weightSum="1">
 
     <include
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/dp_48"
-        android:layout="@layout/item_titlebar" />
+        layout="@layout/item_titlebar" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="@dimen/dp_0"
         android:layout_weight="1"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginStart="@dimen/dp_32"
+            android:gravity="center_vertical"
+            android:text="@string/baud_rate"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/sp_18" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/colorGray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <RadioGroup
+                android:id="@+id/rg_bluetooth_rate1"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rb_bluetooth_rate28600"
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:background="@drawable/radio"
+                    android:checked="true"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/rate_2400"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12" />
+
+                <RadioButton
+                    android:id="@+id/rb_bluetooth_rate11400"
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:background="@drawable/radio"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/rate_1200"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/rg_bluetooth_rate2"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rb_bluetooth_rate9600"
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:background="@drawable/radio"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/rate_9600"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12" />
+
+                <RadioButton
+                    android:id="@+id/rb_bluetooth_rate3600"
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:background="@drawable/radio"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/rate_3600"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginTop="@dimen/dp_24"
+            android:background="@color/colorGray" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginStart="@dimen/dp_32"
+            android:gravity="center_vertical"
+            android:text="@string/check_way"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/sp_18" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/colorGray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <RadioGroup
+                android:id="@+id/rg_bluetooth_vertify1"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rb_bluetooth_parity"
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:background="@drawable/radio"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="@string/Eparity"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12" />
+
+                <RadioButton
+                    android:id="@+id/rb_bluetooth_crc"
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:background="@drawable/radio"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/Nparity"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/rg_bluetooth_vertify2"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rb_bluetooth_redundancy"
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:background="@drawable/radio"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/Oparity"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12" />
+            </RadioGroup>
+
+        </LinearLayout>
+    </LinearLayout>
+
     <TextView
-        android:layout_marginStart="@dimen/dp_32"
-        android:gravity="center_vertical"
+        android:id="@+id/tv_bluetooth_connect"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_48"
-        android:text="@string/baud_rate"
-        android:textSize="@dimen/sp_18"
-        android:textColor="@color/colorBlack"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_1"
-        android:background="@color/colorGray"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-        <LinearLayout
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_weight="1">
-        <TextView
-            android:id="@+id/tv_bluetooth_rate28600"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/dp_24"
-            android:layout_width="@dimen/dp_120"
-            android:layout_height="@dimen/dp_40"
-            android:textColor="@color/colorBlack"
-            android:text="@string/rate_28600"
-            android:textSize="@dimen/sp_12"
-            android:background="@drawable/setting_border_normal"/>
-        <TextView
-            android:id="@+id/tv_bluetooth_rate11400"
-            android:layout_marginTop="@dimen/dp_24"
-            android:gravity="center"
-            android:layout_width="@dimen/dp_120"
-            android:layout_height="40dp"
-            android:textColor="@color/colorBlack"
-            android:text="@string/rate_11400"
-            android:textSize="@dimen/sp_12"
-            android:background="@drawable/setting_border_normal"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_weight="1">
-        <TextView
-            android:id="@+id/tv_bluetooth_rate9600"
-            android:layout_marginTop="@dimen/dp_24"
-            android:gravity="center"
-            android:layout_width="@dimen/dp_120"
-            android:layout_height="40dp"
-            android:textColor="@color/colorBlack"
-            android:text="@string/rate_9600"
-            android:textSize="@dimen/sp_12"
-            android:background="@drawable/setting_border_normal"/>
-        <TextView
-            android:id="@+id/tv_bluetooth_rate3600"
-            android:layout_marginTop="@dimen/dp_24"
-            android:gravity="center"
-            android:layout_width="@dimen/dp_120"
-            android:layout_height="40dp"
-            android:textColor="@color/colorBlack"
-            android:text="@string/rate_3600"
-            android:textSize="@dimen/sp_12"
-            android:background="@drawable/setting_border_normal"/>
-        </LinearLayout>
-
-    </LinearLayout>
-    <View
-        android:layout_marginTop="@dimen/dp_24"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_1"
-        android:background="@color/colorGray"/>
-    <TextView
-        android:layout_marginStart="@dimen/dp_32"
-        android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
-        android:text="@string/check_way"
-        android:textSize="@dimen/sp_18"
-        android:textColor="@color/colorBlack"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_1"
-        android:background="@color/colorGray"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-        <LinearLayout
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_weight="1">
-            <TextView
-                android:id="@+id/tv_bluetooth_parity"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/dp_24"
-                android:layout_width="@dimen/dp_120"
-                android:layout_height="@dimen/dp_40"
-                android:textColor="@color/colorBlack"
-                android:text="@string/parity"
-                android:textSize="@dimen/sp_12"
-                android:background="@drawable/setting_border_normal"/>
-            <TextView
-                android:id="@+id/tv_bluetooth_crc"
-                android:layout_marginTop="@dimen/dp_24"
-                android:gravity="center"
-                android:layout_width="@dimen/dp_120"
-                android:layout_height="40dp"
-                android:textColor="@color/colorBlack"
-                android:text="@string/crc"
-                android:textSize="@dimen/sp_12"
-                android:background="@drawable/setting_border_normal"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_weight="1">
-            <TextView
-                android:id="@+id/tv_bluetooth_redundancy"
-                android:layout_marginTop="@dimen/dp_24"
-                android:gravity="center"
-                android:layout_width="@dimen/dp_120"
-                android:layout_height="40dp"
-                android:textColor="@color/colorBlack"
-                android:text="@string/redundancy"
-                android:textSize="@dimen/sp_12"
-                android:background="@drawable/setting_border_normal"/>
-            <TextView
-                android:id="@+id/tv_bluetooth_rs3"
-                android:layout_marginTop="@dimen/dp_24"
-                android:gravity="center"
-                android:layout_width="@dimen/dp_120"
-                android:layout_height="40dp"
-                android:textColor="@color/colorBlack"
-                android:text="@string/rs3"
-                android:textSize="@dimen/sp_12"
-                android:background="@drawable/setting_border_normal"/>
-        </LinearLayout>
-
-    </LinearLayout>
-    </LinearLayout>
-    <TextView
+        android:background="@color/colorLightBlue"
         android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
         android:text="@string/connect"
         android:textColor="@color/colorWhite"
-        android:textSize="@dimen/sp_18"
-        android:background="@color/colorLightBlue"/>
+        android:textSize="@dimen/sp_18" />
 </LinearLayout>

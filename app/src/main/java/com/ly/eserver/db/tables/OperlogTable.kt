@@ -13,6 +13,7 @@ object OperlogTable {
     val ADDRESS = "address"
     val TYPE = "type"
     val ISFINISH = "isfinish"
+    val ISSENDED = "issended"
     val RESULT = "result"
     val TIME = "time"
 }

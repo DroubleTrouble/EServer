@@ -17,8 +17,8 @@ class RetrievePwdActivityPresenterImpl : BasePresenter<RetrievePwdActivityPresen
         RetrievePwdActivityPresenter.Presenter, AnkoLogger {
     override fun changePwd(userBean: UserBean) {
         val listener = object : HttpOnNextListener<UserBean>() {
-            override fun onNext(t: Any) {
-                mView!!.refreshView(t as UserBean)
+            override fun onNext(t: Any?) {
+                mView!!.refreshView(t)
             }
         }
         invoke(ApiManager.instence.service.changePwd(userBean), Callback(listener))

@@ -11,7 +11,7 @@
         android:layout_height="@dimen/dp_0"
         android:layout_weight="1"
         android:background="@drawable/huge_bg"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,46 +41,34 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_16"
                     android:layout_marginStart="@dimen/dp_16"
-                    android:src="@drawable/phone_icon" />
+                    android:src="@drawable/phone_icon"
+                    android:contentDescription="TODO" />
 
                 <EditText
                     android:id="@+id/et_retrievepwd_phone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_alignEnd="@+id/ll_retrieve_send"
+                    android:layout_alignEnd="@+id/bt_retrieve_send"
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="@dimen/dp_56"
                     android:layout_marginRight="@dimen/dp_16"
                     android:background="@null"
                     android:hint="@string/bind_phone"
                     android:imeOptions="actionNext"
-                    android:inputType="numberPassword"
+                    android:inputType="number"
                     android:textSize="@dimen/sp_16" />
 
-                <LinearLayout
-                    android:id="@+id/ll_retrieve_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:gravity="center"
-                    android:orientation="horizontal">
 
-                    <View
-                        android:id="@+id/view"
-                        android:layout_width="@dimen/dp_1"
-                        android:layout_height="@dimen/dp_24"
-                        android:background="@color/colorGray"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                    <com.ly.eserver.util.SendValidateButton
+                        android:id="@+id/bt_retrieve_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:background="@null"
                         android:layout_marginLeft="@dimen/dp_16"
                         android:layout_marginRight="@dimen/dp_16"
-                        android:text="发送"
-                        android:textColor="@color/colorSend" />
-                </LinearLayout>
+                        />
             </RelativeLayout>
 
             <LinearLayout
@@ -96,7 +84,8 @@
                     android:layout_height="@dimen/dp_24"
                     android:layout_marginLeft="@dimen/dp_16"
                     android:layout_marginStart="@dimen/dp_16"
-                    android:src="@drawable/password_icon" />
+                    android:src="@drawable/password_icon"
+                    android:contentDescription="TODO" />
 
                 <EditText
                     android:id="@+id/et_retrievepwd_verifycode"
@@ -109,7 +98,7 @@
                     android:background="@null"
                     android:hint="@string/verify_code"
                     android:imeOptions="actionNext"
-                    android:inputType="numberPassword"
+                    android:inputType="number"
                     android:textSize="@dimen/sp_16" />
             </LinearLayout>
 
@@ -126,7 +115,8 @@
                     android:layout_height="@dimen/dp_24"
                     android:layout_marginLeft="@dimen/dp_16"
                     android:layout_marginStart="@dimen/dp_16"
-                    android:src="@drawable/password_icon" />
+                    android:src="@drawable/password_icon"
+                    android:contentDescription="TODO" />
 
                 <EditText
                     android:id="@+id/et_retrievepwd_newpwd"
@@ -151,11 +141,12 @@
             android:layout_marginTop="@dimen/dp_16">
 
             <ImageView
-                android:id="@+id/tv_retrievepwd_next"
+                android:id="@+id/iv_retrievepwd_next"
                 android:layout_width="@dimen/dp_58"
                 android:layout_height="@dimen/dp_58"
                 android:layout_gravity="center"
-                android:src="@drawable/next_step" />
+                android:src="@drawable/next_step"
+                android:contentDescription="TODO" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,41 +1,38 @@
 package com.ly.eserver.ui.activity.base
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.graphics.Color
-import android.os.Build
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.*
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.View
-import android.view.WindowManager
 import com.blankj.utilcode.util.ToastUtils
 import com.ly.eserver.http.LifeSubscription
 import com.ly.eserver.http.Stateful
-import com.ly.eserver.widgets.LoadingPage
+import com.ly.eserver.ui.widgets.LoadingPage
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.jetbrains.anko.*
 import shinetechzz.com.vcleaders.presenter.base.BasePresenter
-import android.support.v4.content.ContextCompat
-import android.widget.Toast
 import com.ly.eserver.app.Constants
-import android.content.DialogInterface
-import android.support.annotation.NonNull
-import android.support.v7.app.AlertDialog
-import permissions.dispatcher.PermissionRequest
-
+import android.os.Handler
+import android.os.Message
+import com.ly.eserver.service.BluetoothService
+import com.ly.eserver.service.DeviceControl
+import com.ly.eserver.util.BluetoothSet
+import java.lang.ref.WeakReference
 
 /**
  * Created by zengwendi on 2017/6/12.
  */
 
 abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSubscription, Stateful ,AnkoLogger{
+    val SET_NAME = "blue_set"//设置文件名称
     val mCompositeDisposable: CompositeDisposable = CompositeDisposable()
     lateinit var mPresenter: T
     var mLoadingPage: LoadingPage? = null
-
+    lateinit var mHandler: Handler
+    lateinit var mBroadcastReceiver: BroadcastReceiver
+    lateinit var intentFilter: IntentFilter
     val REQUEST_CONTACTS : Int = 200
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +44,18 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
 //            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 //            window.statusBarColor = Color.TRANSPARENT
 //        }
+        mHandler = BaseHandler(this)
+        mBroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                onBroadcastReceive(context, intent)
+            }
+        }
+        intentFilter = IntentFilter()
+        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);//搜索发现设备
+        intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);//状态改变
+        intentFilter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);//行动扫描模式改变了
+        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);//动作状态发生了变化
+        registerReceiver(mBroadcastReceiver, intentFilter);
         initData()
         mPresenter!!.attachView(this)
         mLoadingPage = object : LoadingPage(this) {
@@ -71,6 +80,47 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
         mCompositeDisposable!!.add(disposable)
     }
 
+
+     override fun onResume() {
+        super.onResume()
+        //注册广播
+        this.registerReceiver(mBroadcastReceiver, intentFilter)
+    }
+
+    public override fun onPause() {
+        super.onPause()
+        //取消注册广播
+        this.unregisterReceiver(mBroadcastReceiver)
+    }
+
+    /**
+     * 消息接收器
+     * @author Xuqn
+     */
+    internal class BaseHandler(activity: BaseActivity<*>) : Handler() {
+        var mActivity: WeakReference<BaseActivity<*>>
+        init {
+            mActivity = WeakReference<BaseActivity<*>>(activity)
+        }
+        override fun handleMessage(msg: Message) {
+            mActivity.get()!!.onHandlerReceive(msg)
+        }
+    }
+
+    /**
+     * 消息接收器
+     * @param msg
+     */
+    protected abstract fun onHandlerReceive(msg: Message)
+
+    /**
+     * 广播接收器
+     * @param context
+     * @param intent
+     */
+    protected abstract fun onBroadcastReceive(context: Context, intent: Intent)
+
+
     override fun setState(state: Int) {
         mLoadingPage!!.state = state
         mLoadingPage!!.showPage()
@@ -82,6 +132,45 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
             mCompositeDisposable.dispose()
         }
         mPresenter!!.detachView()
+        mHandler.removeCallbacksAndMessages(null)
+    }
+
+    /**
+     * 检测设备状态
+     * @return
+     */
+    fun checkDeviceStatus(): Boolean {
+        if (this.getSharedPreferences(SET_NAME, Context.MODE_PRIVATE).getInt(BluetoothSet.QUERY_DEVICE, -1) == Constants.QUERY_BLUETOOTH) {
+            val bluetooth = BluetoothAdapter.getDefaultAdapter()
+            if (bluetooth.isEnabled) {
+                //蓝牙开启
+                val handler = DeviceControl.instance.bluetoothandler
+                if (handler != null) {
+                    //蓝牙服务开启
+                    val status = handler.service.status
+                    //蓝牙连接开启
+                    if (status === BluetoothService.BluetoothStatus.START) {
+                        return true
+                    } else if (status === BluetoothService.BluetoothStatus.PAUSE && handler.service.preStatus === BluetoothService.BluetoothStatus.START) {
+                        return true
+                    } else if (status === BluetoothService.BluetoothStatus.STARTING) {
+                        ToastUtils.showShort("蓝牙设备连接中,请稍后重试")
+                    } else {
+                        //开始蓝牙搜索
+                        handler.service.start(null)
+                        ToastUtils.showShort("无法连接默认蓝牙抄读器,请开启蓝牙外设或设置新的蓝牙抄读器")
+                    }
+                } else {
+                    ToastUtils.showShort("蓝牙服务开启中,请稍后重试")
+                }
+            } else {
+                ToastUtils.showShort("未开启蓝牙,请开启蓝牙设备")
+            }
+        } else {
+            //非蓝牙设备不需要检测
+            return true
+        }
+        return false
     }
 
     /**
@@ -115,8 +204,5 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
      */
     abstract fun initView()
 
-
-    fun <K, V : Any> MutableMap<K, V?>.toVarargArray():
-            Array<out Pair<K, V>> =  map({ Pair(it.key, it.value!!) }).toTypedArray()
 
 }

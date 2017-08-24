@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <include
+        layout="@layout/item_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:text="@string/reimbursement"
+                    android:textColor="@color/colorBlackGray"
+                    android:textSize="@dimen/sp_24" />
+
+                <TextView
+                    android:id="@+id/tv_reimbursement_department"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:text="部门"
+                    android:textColor="@color/colorlightGray"
+                    android:textSize="@dimen/sp_14" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:text="@string/location" />
+
+                <TextView
+                    android:id="@+id/tv_reimbursement_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:text="地理位置"
+                    android:textColor="@color/colorlightGray" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_16"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/accommodation" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_accommodation"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/food" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_food"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/office" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_office"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/low_value_consumables" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_lowValueConsumables"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/hospitality" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_hospitality"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/welfare" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_welfare"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/travel" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_travel"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/vehicle" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_vehicle"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/material" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_material"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/courier" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_courier"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/administrative" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_administrative"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:text="@string/others" />
+
+                    <EditText
+                        android:id="@+id/ed_reimbursement_others"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_48"
+                        android:background="@drawable/form_border"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
+                        android:hint="@string/RMB"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_18" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/tv_reimbursement_next"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:background="@color/colorLightBlue"
+        android:gravity="center"
+        android:text="@string/next"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/sp_18" />
+</LinearLayout>

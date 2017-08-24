@@ -1,5 +1,7 @@
 package com.ly.eserver.bean
 
+import java.io.Serializable
+
 data class ProjectBean constructor(
     val projectid: Int? = null,                //主键
     val area: String? = null,        //大区
@@ -29,4 +31,6 @@ data class ProjectBean constructor(
     val bookIncome: Double? = null,        //账面收入
     val remarks: String? = null            //备注
 
-)
+): Serializable {
+
+}

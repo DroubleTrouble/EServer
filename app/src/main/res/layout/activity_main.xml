@@ -15,5 +15,5 @@
     <include layout="@layout/menu_left_profile" />
     <include layout="@layout/menu_content_home" />
 
-</com.jkb.slidemenu.SlideMenuLayout>
+</com.jkb.slidemenu.SlideMenuLayout>>
 </RelativeLayout>

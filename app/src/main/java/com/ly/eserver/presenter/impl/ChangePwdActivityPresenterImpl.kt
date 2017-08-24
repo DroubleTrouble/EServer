@@ -14,13 +14,11 @@ import shinetechzz.com.vcleaders.presenter.base.BasePresenter
 class ChangePwdActivityPresenterImpl : BasePresenter<ChangePwdActivityPresenter.View>(),
         ChangePwdActivityPresenter.Presenter,AnkoLogger{
     override fun changePwd(userBean: UserBean) {
-        val listener = object : HttpOnNextListener<UserBean>() {
-            override fun onNext(t: Any) {
-                info("ChangePwdActivityPresenterImpl->onNext")
-                mView!!.refreshView(t as UserBean)
+        val listener = object : HttpOnNextListener<Any>() {
+            override fun onNext(t: Any?) {
+                mView!!.refreshView(t)
             }
         }
-        info("ChangePwdActivityPresenterImpl")
         invoke(ApiManager.instence.service.changePwd(userBean), Callback(listener))
     }
 }

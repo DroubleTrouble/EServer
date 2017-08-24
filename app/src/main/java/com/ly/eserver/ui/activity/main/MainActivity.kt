@@ -1,20 +1,17 @@
 package com.ly.eserver.ui.activity.main
 
-import android.Manifest
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Point
+import android.os.Message
 import android.view.WindowManager
 import com.baidu.location.BDLocation
 import com.baidu.location.BDLocationListener
 import com.baidu.mapapi.SDKInitializer
-import com.baidu.mapapi.map.BaiduMap
-import com.baidu.mapapi.map.MapStatus
-import com.baidu.mapapi.map.MapStatusUpdateFactory
-import com.baidu.mapapi.map.MyLocationConfiguration
-import com.baidu.mapapi.map.MyLocationData
+import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
+import com.blankj.utilcode.util.ToastUtils
 import com.ly.eserver.R
 import com.ly.eserver.app.Constants
 import com.ly.eserver.app.KotlinApplication
@@ -23,11 +20,12 @@ import com.ly.eserver.bean.UserBean
 import com.ly.eserver.db.dao.UserDao
 import com.ly.eserver.presenter.MainActivityPresenter
 import com.ly.eserver.presenter.impl.MainActivityPresenterImpl
+import com.ly.eserver.service.LocationService
+import com.ly.eserver.ui.activity.BlueToothActivity
+import com.ly.eserver.ui.activity.ChangePwdActivity
+import com.ly.eserver.ui.activity.ReadDataActivity
+import com.ly.eserver.ui.activity.ReimbursementActivity
 import com.ly.eserver.ui.activity.base.BaseActivity
-import com.ly.eserver.ui.util.map.service.LocationService
-import com.yanzhenjie.permission.AndPermission
-import com.yanzhenjie.permission.PermissionNo
-import com.yanzhenjie.permission.PermissionYes
 import kotlinx.android.synthetic.main.menu_content_home.*
 import kotlinx.android.synthetic.main.menu_left_profile.*
 import org.jetbrains.anko.info
@@ -39,13 +37,18 @@ import org.jetbrains.anko.startActivity
  */
 class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseActivity<MainActivityPresenterImpl>(),
         MainActivityPresenter.View {
-    lateinit var application : KotlinApplication
-    val userDao : UserDao = UserDao(this)
+    override fun onHandlerReceive(msg: Message) {
+    }
+
+    override fun onBroadcastReceive(context: Context, intent: Intent) {
+    }
+
+    val userDao: UserDao = UserDao(this)
     lateinit var user: UserBean
     lateinit var locationService: LocationService
     lateinit var myListener: BDLocationListener
     lateinit var mBaiduMap: BaiduMap
-    lateinit var main_BDlocation: BDLocation
+    var main_BDlocation: BDLocation? = null
     var isFirstLoc: Boolean = true
 
     override fun refreshView(data: ProjectBean) {
@@ -54,13 +57,13 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
 
     override fun initData() {
         mPresenter = MainActivityPresenterImpl()
-        application = getApplication() as KotlinApplication
         SDKInitializer.initialize(getApplicationContext())
 
     }
 
     override fun loadData() {
-        user = userDao.queryUser(application.useridApp)!!
+        user = userDao.queryUser(KotlinApplication.useridApp)!!
+        info("user!-------------" + user.toString())
         if (user.projectid != 0) {
             mPresenter.findProject(user.projectid!!)
         } else {
@@ -70,7 +73,6 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
     }
 
     override fun initView() {
-        getPermission()
         //左边profile页面
         tv_profile_username.text = user.username
         tv_profile_department.text = user.department
@@ -78,24 +80,102 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
         if (user.projectid == 0) {
             tv_profile_project.text = null
         }
-        ll_profile_changepwd.setOnClickListener { view ->
+        ll_profile_changepwd.setOnClickListener {
             startActivity<ChangePwdActivity>()
-        }
+            locationService.stop()
 
+        }
+        ll_profile_bluetooth.setOnClickListener {
+            startActivity<BlueToothActivity>()
+            locationService.stop()
+
+        }
+        ll_profile_log.setOnClickListener {
+            startActivity<ReimbursementActivity>("location" to main_BDlocation!!.locationDescribe)
+            locationService.stop()
+
+        }
+        //地图页面
+        mBaiduMap = mv_menuContent_map.map
+        initMap()
+        iv_menuContent_location.setOnClickListener {
+            if (mBaiduMap.locationConfiguration.locationMode == MyLocationConfiguration.LocationMode.COMPASS) {
+                mBaiduMap.setMyLocationConfiguration(
+                        MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null))
+                val builder1 = MapStatus.Builder()
+                builder1.overlook(0f)
+                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder1.build()))
+                info("切换为following模式")
+
+            } else {
+                mBaiduMap.uiSettings.setOverlookingGesturesEnabled(false)
+                mBaiduMap.setMyLocationConfiguration(
+                        MyLocationConfiguration(MyLocationConfiguration.LocationMode.COMPASS, true, null))
+                val builder1 = MapStatus.Builder()
+                builder1.overlook(0f)
+                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder1.build()))
+                info("切换为compass模式")
+            }
+            locationService.registerListener(myListener)
+            locationService.start()
+        }
+        val bluetooth = BluetoothAdapter.getDefaultAdapter()
+//        if (bluetooth.isEnabled) {
+//            iv_menuContent_bluetooth.setImageResource(R.drawable.close_bluet)
+//        }
+        ll_menucontent_startdata.setOnClickListener {
+            locationService.stop()
+            locationService.unregisterListener(myListener)
+
+            if (!bluetooth.isEnabled) {
+                ToastUtils.showShort("蓝牙未开启,请打开蓝牙设备!")
+                startActivity<BlueToothActivity>()
+            } else {
+                if (main_BDlocation != null) {
+                    startActivity<ReadDataActivity>("location" to main_BDlocation!!)
+                } else {
+                    startActivity<ReadDataActivity>("location" to "")
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val bluetooth = BluetoothAdapter.getDefaultAdapter()
+        if (bluetooth.isEnabled) {
+            iv_menuContent_bluetooth.setImageResource(R.drawable.close_bluet)
+        } else {
+            iv_menuContent_bluetooth.setImageResource(R.drawable.open_bluet)
+        }
+        locationService.registerListener(myListener)
+        locationService.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        locationService.unregisterListener(myListener)
+        locationService.stop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        locationService.unregisterListener(myListener)
+        locationService.stop()
     }
 
     internal fun initMap() {
         val wm1: WindowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val width: Int = wm1.getDefaultDisplay().width
         val height: Int = wm1.getDefaultDisplay().height
-        mBaiduMap = mv_menuContent_map.map
+//        mBaiduMap = mv_menuContent_map.map
         mBaiduMap.isMyLocationEnabled = true
         mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(MapStatus.Builder().zoom(18f).build()))
         mBaiduMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
             mv_menuContent_map.setZoomControlsPosition(Point(width - 150, height - 500))
         })
         //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
-        locationService = LocationService(this)
+        locationService = LocationService(applicationContext)
         //创建监听对象
         myListener = MyLocationListener()
         //注册监听
@@ -103,57 +183,13 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
         mBaiduMap.setMyLocationConfiguration(
                 MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null))
 
-        var type: Int = getIntent().getIntExtra("from", 0)
-        if (type == 0) {
+//        val type: Int = getIntent().getIntExtra("from", 0)
+//        if (type == 0) {
             locationService.setLocationOption(locationService.defaultLocationClientOption)
-        } else if (type == 1) {
-            locationService.setLocationOption(locationService.option)
-        }
+//        } else if (type == 1) {
+//            locationService.setLocationOption(locationService.option)
+//        }
         locationService.start()
-
-    }
-    /**
-     * 安卓6.0后动态获取权限
-     */
-    fun getPermission(){
-        //动态获取权限
-        if (AndPermission.hasPermission(this, Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            initMap()
-        } else {
-            // 请求用户授权。
-            AndPermission.with(this)
-                    .requestCode(100)
-                    .permission(Manifest.permission.READ_PHONE_STATE,
-                            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .send()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        // 只需要调用这一句，第一个参数是当前Acitivity/Fragment，回调方法写在当前Activity/Framgent。
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)
-    }
-
-    // 成功回调的方法，用注解即可，里面的数字是请求时的requestCode。
-    @PermissionYes(100)
-    private fun getYes(grantedPermissions: List<String>) {
-        // TODO 申请权限成功。
-//        info("成功")
-        initMap()
-    }
-
-    // 失败回调的方法，用注解即可，里面的数字是请求时的requestCode。
-    @PermissionNo(100)
-    private fun getNo(deniedPermissions: List<String>) {
-        // 用户否勾选了不再提示并且拒绝了权限，那么提示用户到设置中授权。
-        if (AndPermission.hasAlwaysDeniedPermission(this, deniedPermissions)) {
-            // 第一种：用默认的提示语。
-            AndPermission.defaultSettingDialog(this, 1).show()
-        }
-        info("失败")
 
     }
 
@@ -167,12 +203,8 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
 
     //定位当前位置-----------------------------------
     inner class MyLocationListener : BDLocationListener {
-        override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
 
         override fun onReceiveLocation(location: BDLocation?) {
-            // TODO Auto-generated method stub
 
             if (location == null) {
                 return
@@ -189,5 +221,6 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
             }
         }
     }
+
 
 }

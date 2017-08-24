@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        layout="@layout/item_titlebar" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        android:text="@string/table_address" />
+
+    <EditText
+        android:id="@+id/ed_readdata_tableAddress"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:background="@drawable/form_border"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/sp_18" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="@string/protocol_type" />
+
+        <Spinner
+            android:id="@+id/sp_readdata_tableType"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:background="@drawable/form_border"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/sp_18" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="@string/data_identification" />
+
+        <TextView
+            android:id="@+id/ed_readdata_dataIdentification"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:background="@drawable/form_border"
+            android:gravity="center_vertical"
+            android:text="正向有功电能"
+            android:textColor="@color/colorBlackGray"
+            android:textSize="@dimen/sp_18" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="@string/read_result" />
+
+        <TextView
+            android:id="@+id/tv_readdata_readResult"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_195"
+            android:background="@drawable/form_border"
+            android:gravity="start|top"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/sp_18" />
+        <Button
+            android:id="@+id/bt_readdata_startreaddata"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="@drawable/shape"
+            android:text="@string/startreaddata"
+            android:textSize="@dimen/sp_18"
+            android:textColor="@color/colorWhite"
+            android:layout_height="@dimen/dp_48" />
+    </LinearLayout>
+</LinearLayout>

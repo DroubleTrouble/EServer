@@ -5,11 +5,15 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorDeepBlue">#429DCF</color>
     <color name="colorLightBlue">#58b1e3</color>
+    <color name="colorStautsBlue">#a758b1e3</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhitebg">#d8ffffff</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorGray">#ededed</color>
     <color name="colorSend">#4990E2</color>
     <color name="colorlightbg">#f9f9f9</color>
+    <color name="colorGray">#ededed</color>
+    <color name="colorBlackGray">#9b9b9b</color>
+    <color name="colorlightGray">#cccccc</color>
+
 
 </resources>

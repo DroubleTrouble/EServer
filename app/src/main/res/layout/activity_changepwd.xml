@@ -38,7 +38,8 @@
                 android:layout_height="@dimen/dp_24"
                 android:layout_marginLeft="@dimen/dp_16"
                 android:layout_marginStart="@dimen/dp_16"
-                android:src="@drawable/password_icon" />
+                android:src="@drawable/password_icon"
+                android:contentDescription="TODO" />
 
             <EditText
                 android:id="@+id/et_changepwd_oldpwd"
@@ -66,7 +67,8 @@
                 android:layout_height="@dimen/dp_24"
                 android:layout_marginLeft="@dimen/dp_16"
                 android:layout_marginStart="@dimen/dp_16"
-                android:src="@drawable/password_icon" />
+                android:src="@drawable/password_icon"
+                android:contentDescription="TODO" />
 
             <EditText
                 android:id="@+id/et_changepwd_newpwd"
@@ -94,7 +96,8 @@
                 android:layout_height="@dimen/dp_24"
                 android:layout_marginLeft="@dimen/dp_16"
                 android:layout_marginStart="@dimen/dp_16"
-                android:src="@drawable/password_icon" />
+                android:src="@drawable/password_icon"
+                android:contentDescription="TODO" />
 
             <EditText
                 android:id="@+id/et_changepwd_configpwd"
@@ -122,7 +125,8 @@
             android:layout_gravity="center"
             android:layout_width="@dimen/dp_58"
             android:layout_height="@dimen/dp_58"
-            android:src="@drawable/next_step"/>
+            android:src="@drawable/next_step"
+            android:contentDescription="TODO" />
     </LinearLayout>
     </LinearLayout>
 </LinearLayout>

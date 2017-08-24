@@ -9,7 +9,7 @@ abstract class HttpOnNextListener<out T> {
      * 成功后回调方法
      * @param t
      */
-    abstract fun onNext(t: Any)
+    abstract fun onNext(t: Any?)
 
     /**
      * 緩存回調結果

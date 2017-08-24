@@ -17,7 +17,8 @@
             android:layout_width="@dimen/dp_128"
             android:layout_height="@dimen/dp_48"
             android:layout_marginTop="@dimen/dp_128"
-            android:src="@drawable/logo_text" />
+            android:src="@drawable/logo_text"
+            android:contentDescription="TODO" />
     </LinearLayout>
 
     <LinearLayout
@@ -41,7 +42,8 @@
                 android:layout_height="@dimen/dp_24"
                 android:layout_marginLeft="@dimen/dp_16"
                 android:layout_marginStart="@dimen/dp_16"
-                android:src="@drawable/username_icon" />
+                android:src="@drawable/username_icon"
+                android:contentDescription="TODO" />
 
             <EditText
                 android:id="@+id/et_login_userid"
@@ -72,7 +74,8 @@
                 android:layout_height="@dimen/dp_24"
                 android:layout_marginLeft="@dimen/dp_16"
                 android:layout_marginStart="@dimen/dp_16"
-                android:src="@drawable/password_icon" />
+                android:src="@drawable/password_icon"
+                android:contentDescription="TODO" />
 
             <EditText
                 android:id="@+id/et_login_password"
@@ -99,7 +102,8 @@
                 android:id="@+id/iv_login_next"
                 android:layout_width="@dimen/dp_58"
                 android:layout_height="@dimen/dp_58"
-                android:src="@drawable/next_step" />
+                android:src="@drawable/next_step"
+                android:contentDescription="TODO" />
         </LinearLayout>
 
         <RelativeLayout

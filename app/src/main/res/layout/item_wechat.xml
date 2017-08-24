@@ -39,7 +39,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"
                 android:scaleType="centerCrop"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:contentDescription="TODO" />
 
         </LinearLayout>
 

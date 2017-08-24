@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        layout="@layout/item_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sp_24"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_16"
+        android:text="@string/work_detail"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_16"
+        android:text="@string/description"
+        />
+    <EditText
+        android:id="@+id/et_personlog_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_238"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:inputType="textMultiLine"
+        android:gravity="left|top"
+        android:hint="工作内容文字说明"
+        android:background="@drawable/form_border"/>
+
+    <Button
+        android:id="@+id/bt_personlog_commit"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:background="@drawable/shape"
+        android:text="@string/commit"
+        android:textSize="@dimen/sp_18"
+        android:textColor="@color/colorWhite"
+        android:layout_height="@dimen/dp_48" />
+</LinearLayout>

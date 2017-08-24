@@ -15,12 +15,12 @@ import shinetechzz.com.vcleaders.presenter.base.BasePresenter
 class MainActivityPresenterImpl : BasePresenter<MainActivityPresenter.View>(),MainActivityPresenter.Presenter,AnkoLogger {
     override fun findProject(projectid: Int) {
         val listener = object : HttpOnNextListener<ProjectBean>() {
-            override fun onNext(t: Any) {
-                info("LoginActivityPresenterImpl->onNext")
+            override fun onNext(t: Any?) {
+                info("MainActivityPresenterImpl->onNext")
                 mView!!.refreshView(t as ProjectBean)
             }
         }
-        info("LoginActivityPresenterImpl")
+        info("MainActivityPresenterImpl")
         invoke(ApiManager.instence.service.findProject(projectid), Callback(listener))
     }
 

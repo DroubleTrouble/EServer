@@ -24,7 +24,7 @@ class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatab
 
     override fun onCreate(db: SQLiteDatabase) {
         // 创建数据库
-        db?.createTable(UserTable.NAME, true,
+        db.createTable(UserTable.NAME, true,
                 UserTable.USERID to INTEGER + PRIMARY_KEY,
                 UserTable.USERNAME to TEXT,
                 UserTable.PASSWORD to TEXT,
@@ -34,17 +34,21 @@ class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatab
                 UserTable.PIN2 to TEXT,
                 UserTable.DEPARTMENT to TEXT
         )
-        db?.createTable(OperlogTable.NAME, true,
-                OperlogTable.OPERLOGID to INTEGER + PRIMARY_KEY,
-                OperlogTable.USERID to INTEGER,
-                OperlogTable.TABLEADDRESS to TEXT,
-                OperlogTable.LOCATION to TEXT,
-                OperlogTable.ADDRESS to TEXT,
-                OperlogTable.ISFINISH to TEXT,
-                OperlogTable.TYPE to TEXT,
-                OperlogTable.TIME to TEXT,
-                OperlogTable.RESULT to TEXT
-        )
+        with(OperlogTable) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS `" + NAME + "`(" +
+                    OperlogTable.OPERLOGID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    OperlogTable.USERID + " INTEGER, " +
+                    OperlogTable.TABLEADDRESS + " TEXT," +
+                    OperlogTable.LOCATION + " TEXT," +
+                    OperlogTable.ADDRESS + " TEXT," +
+                    OperlogTable.ISFINISH + " TEXT," +
+                    OperlogTable.ISSENDED + " TEXT," +
+                    OperlogTable.TYPE + " TEXT," +
+                    OperlogTable.TIME + " TEXT,"
+                    +OperlogTable.RESULT + " TEXT);" )
+        }
+
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

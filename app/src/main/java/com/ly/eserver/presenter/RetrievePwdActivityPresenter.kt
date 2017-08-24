@@ -7,7 +7,7 @@ import com.ly.eserver.presenter.base.BaseView
  * Created by Max on 2017/7/25.
  */
 interface RetrievePwdActivityPresenter {
-    interface View : BaseView<UserBean>
+    interface View : BaseView<Any?>
 
     interface Presenter {
         fun changePwd(userBean: UserBean)

@@ -33,7 +33,7 @@ class Callback<T>(val mListener: HttpOnNextListener<Any?>) : Observer<T> ,AnkoLo
     }
 
     override fun onNext(value: T) {
-        info("Callback onNext")
+        info(value.toString())
         if (value is DataBean<*>) {
             onResponse(value)
         }
@@ -60,7 +60,7 @@ class Callback<T>(val mListener: HttpOnNextListener<Any?>) : Observer<T> ,AnkoLo
             mListener.onError()
             return
         }
-        if (!data!!.status.equals("200")) {
+        if (!data.status.equals("200")) {
             ToastUtils.showShort(data.mesg)
             mListener.onError()
             return
@@ -68,7 +68,8 @@ class Callback<T>(val mListener: HttpOnNextListener<Any?>) : Observer<T> ,AnkoLo
         if (mTarget != null)
             mTarget!!.setState(com.ly.eserver.app.Constants.Companion.STATE_SUCCESS)
         error("onResponse")
-        mListener!!.onNext(data.data!!)
+        mListener.onNext(data.data)
+
     }
 
     fun onfail(e: Throwable) {

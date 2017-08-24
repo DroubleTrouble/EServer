@@ -13,7 +13,8 @@
         android:layout_height="@dimen/dp_16"
         android:layout_marginLeft="@dimen/dp_16"
         android:layout_centerVertical="true"
-        android:src="@drawable/back"/>
+        android:src="@drawable/back"
+        android:contentDescription="TODO" />
     </LinearLayout>
     <TextView
         android:id="@+id/tv_titlebar_title"
@@ -33,6 +34,7 @@
         android:layout_height="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_centerVertical="true"
-        android:src="@drawable/close"/>
+        android:src="@drawable/close"
+        android:contentDescription="TODO" />
     </LinearLayout>
 </RelativeLayout>

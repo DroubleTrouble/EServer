@@ -16,7 +16,7 @@ class LoginActivityPresenterImpl :BasePresenter<LoginActivityPresenter.View>(),
         LoginActivityPresenter.Presenter, AnkoLogger {
     override fun login(userBean: UserBean) {
         val listener = object : HttpOnNextListener<UserBean>() {
-            override fun onNext(t: Any) {
+            override fun onNext(t: Any?) {
                 info("LoginActivityPresenterImpl->onNext")
                 mView!!.refreshView(t as UserBean)
             }
