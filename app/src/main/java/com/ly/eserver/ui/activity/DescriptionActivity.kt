@@ -5,10 +5,13 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Message
 import android.widget.LinearLayout
+import com.baidu.location.BDLocation
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.ly.eserver.R
 import com.ly.eserver.app.Constants
+import com.ly.eserver.app.KotlinApplication
+import com.ly.eserver.bean.DescriptionBean
 import com.ly.eserver.presenter.DescriptionActivityPresenter
 import com.ly.eserver.presenter.impl.DescriptionActivityPresenterImpl
 import com.ly.eserver.ui.activity.base.BaseActivity
@@ -18,7 +21,11 @@ import com.yuyh.library.imgsel.ImgSelConfig
 import kotlinx.android.synthetic.main.activity_description.*
 import kotlinx.android.synthetic.main.item_titlebar.*
 import org.jetbrains.anko.*
-
+import com.qiniu.android.storage.UploadManager
+import com.qiniu.android.common.FixedZone
+import com.qiniu.android.storage.Configuration
+import com.qiniu.android.storage.UpCompletionHandler
+import java.util.*
 
 /**
  * 说明页面
@@ -29,16 +36,23 @@ class DescriptionActivity (override val layoutId: Int = R.layout.activity_descri
 
     private var imageSelectConfig: ImgSelConfig? = null
     val REQUEST_CODE : Int = 200
-    var pathList : List<String> = ArrayList<String>()
+    val REQUEST_PIC1 : Int = 1
+    val REQUEST_PIC2 : Int = 2
+    var pathList : ArrayList<String> = ArrayList<String>()
+    lateinit var QiniuToken : String
+    lateinit var key : String
+    lateinit var uploadManager : UploadManager
+    var description : DescriptionBean = DescriptionBean()
+    var main_BDlocation : BDLocation? = null
+
     override fun refreshView(mData: Any?) {
+        ToastUtils.showShort("发送成功")
     }
 
     override fun onHandlerReceive(msg: Message) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onBroadcastReceive(context: Context, intent: Intent) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun initData() {
@@ -49,6 +63,10 @@ class DescriptionActivity (override val layoutId: Int = R.layout.activity_descri
     override fun loadData() {
         mLoadingPage!!.state = Constants.Companion.STATE_SUCCESS
         mLoadingPage!!.showPage()
+        QiniuToken = intent.extras.getString("Qiniu")
+        if (intent.extras.get("location").toString() != "") {
+            main_BDlocation = intent.extras.get("location") as BDLocation
+        }
         tv_titlebar_title.text = "提交报告"
         ll_titlebar_back.visibility = LinearLayout.GONE
         iv_description_picture1.visibility = LinearLayout.GONE
@@ -57,8 +75,11 @@ class DescriptionActivity (override val layoutId: Int = R.layout.activity_descri
 
     override fun initView() {
 
+        //配置七牛云
+        configQiniu()
+
         iv_description_addpicture.setOnClickListener {
-            ImgSelActivity.startActivity(this, imageSelectConfig, REQUEST_CODE);
+            ImgSelActivity.startActivity(this, imageSelectConfig, REQUEST_CODE)
         }
 
         bt_description_commit.setOnClickListener {
@@ -67,7 +88,36 @@ class DescriptionActivity (override val layoutId: Int = R.layout.activity_descri
             }else if (pathList.isEmpty()){
                 ToastUtils.showShort("请选择图片")
             }else{
-                info("pathList-------------" + pathList.get(0))
+                //两张图片还有问题
+                val keylist = pathList
+               //上传图片到七牛云
+                for (i in pathList.indices){
+                    key = KotlinApplication.useridApp.toString()+ "_" + pathList[i]
+                    uploadManager.put(pathList[i], key, QiniuToken, { key, info, res ->
+                                //res包含hash、key等信息，具体字段取决于上传策略的设置
+                                if (info.isOK) {
+                                    info( "Upload Success")
+                                    keylist[i] = key
+                                } else {
+                                    info("Upload Fail")
+                                    //如果失败，这里可以把info信息上报自己的服务器，便于后面分析上传错误原因
+                                }
+
+                            }, null)
+                }
+                if (keylist.size != 0) {
+                    description.picture1 = Constants.QINIU_API + keylist[0]
+                    if (keylist.size == 2) {
+                        description.picture2 = Constants.QINIU_API +keylist[1]
+                    }
+                }
+                if (main_BDlocation != null)
+                    description.location = main_BDlocation!!.latitude.toString() + "/" +main_BDlocation!!.longitude.toString()
+                description.userid = KotlinApplication.useridApp
+                description.projectid = KotlinApplication.projectidApp
+                description.description = et_description_description.text.toString()
+                description.time = Date(System.currentTimeMillis())//获取当前时间
+                mPresenter.insertDescription(description)
             }
         }
 
@@ -75,33 +125,62 @@ class DescriptionActivity (override val layoutId: Int = R.layout.activity_descri
             finish()
         }
         iv_description_picture1.setOnClickListener {
-//            if (!pathList.isEmpty())
-//                startActivityForResult<BigPictureActivity>(requestCode = 1,"pathPicture" to pathList.get(0))
+            if (!pathList.isEmpty()) {
+                info("iv_description_picture1" + pathList.get(0) )
+                startActivityForResult<BigPictureActivity>(REQUEST_PIC1, "pathPicture1" to pathList.get(0))
+            }
         }
         iv_description_picture2.setOnClickListener {
             if (pathList.size == 2){
-//                startActivityForResult<BigPictureActivity>(requestCode = 1,"pathPicture" to pathList.get(1))
+                info("iv_description_picture2" + pathList.get(1) )
+                startActivityForResult<BigPictureActivity>(REQUEST_PIC2,"pathPicture2" to pathList.get(1))
             }
         }
+    }
+
+    private fun configQiniu() {
+        val config = Configuration.Builder()
+                .chunkSize(512 * 1024)        // 分片上传时，每片的大小。 默认256K
+                .putThreshhold(1024 * 1024)   // 启用分片上传阀值。默认512K
+                .connectTimeout(10)           // 链接超时。默认10秒
+                .useHttps(true)               // 是否使用https上传域名
+                .responseTimeout(60)          // 服务器响应超时。默认60秒
+                .zone(FixedZone.zone1)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
+                .build()
+
+        // 重用uploadManager。一般地，只需要创建一个uploadManager对象
+        uploadManager = UploadManager(config)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // 图片选择结果回调
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            pathList = data.getStringArrayListExtra(ImgSelActivity.INTENT_RESULT)
-            if (pathList.size == 1){
-                iv_description_picture1.visibility = LinearLayout.VISIBLE
-                iv_description_picture2.visibility = LinearLayout.GONE
-                Glide.with(this).load("file://"+pathList.get(0)).into(iv_description_picture1)
-            }else if (pathList.size == 2){
-                iv_description_picture1.visibility = LinearLayout.VISIBLE
-                iv_description_picture2.visibility = LinearLayout.VISIBLE
-                Glide.with(this).load("file://"+pathList.get(0)).into(iv_description_picture1)
-                Glide.with(this).load("file://"+pathList.get(1)).into(iv_description_picture2)
-            }else {
+        when(requestCode){
+            REQUEST_CODE ->{
+                if (data != null){
+                    pathList = data.getStringArrayListExtra(ImgSelActivity.INTENT_RESULT)
+                    if (pathList.size == 1){
+                        iv_description_picture1.visibility = LinearLayout.VISIBLE
+                        iv_description_picture2.visibility = LinearLayout.GONE
+                        Glide.with(this).load("file://"+pathList.get(0)).into(iv_description_picture1)
+                    }else if (pathList.size == 2){
+                        iv_description_picture1.visibility = LinearLayout.VISIBLE
+                        iv_description_picture2.visibility = LinearLayout.VISIBLE
+                        Glide.with(this).load("file://"+pathList.get(0)).into(iv_description_picture1)
+                        Glide.with(this).load("file://"+pathList.get(1)).into(iv_description_picture2)
+                    }else {
+                        iv_description_picture1.visibility = LinearLayout.GONE
+                        iv_description_picture2.visibility = LinearLayout.GONE
+                    }
+                }
+            }
+            REQUEST_PIC1 ->{
                 iv_description_picture1.visibility = LinearLayout.GONE
+                pathList.removeAt(0)
+            }
+            REQUEST_PIC2 ->{
                 iv_description_picture2.visibility = LinearLayout.GONE
+                pathList.removeAt(1)
             }
         }
     }

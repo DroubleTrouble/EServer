@@ -6,6 +6,4 @@ import shinetechzz.com.vcleaders.presenter.base.BasePresenter
 /**
  * Created by Max on 2017/7/31.
  */
-class BlueToothActivityPresenterImpl : BasePresenter<BlueToothActivityPresenter.View>() {
-
-}
+class BlueToothActivityPresenterImpl : BasePresenter<BlueToothActivityPresenter.View>()

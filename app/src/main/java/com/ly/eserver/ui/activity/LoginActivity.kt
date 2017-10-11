@@ -23,7 +23,6 @@ import org.jetbrains.anko.*
 
 /**
  * 登录页面
- * 密码还未加密，保存用户数据是否确认使用SharedPreferences，还需要考虑
  * Created by Max on 2017/7/6.
  */
 class LoginActivity(override val layoutId: Int = R.layout.activity_login) : BaseActivity<LoginActivityPresenterImpl>(),
@@ -42,7 +41,9 @@ class LoginActivity(override val layoutId: Int = R.layout.activity_login) : Base
 //        info("LoginActivity  "+ mData.toString())
         userDao.saveUser(mData)
         KotlinApplication.useridApp = mData.userid!!
+        KotlinApplication.projectidApp = mData.projectid!!
         startActivity<MainActivity>()
+        finish()
     }
 
     override fun initData() {

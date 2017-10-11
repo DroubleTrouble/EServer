@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        layout="@layout/item_titlebar" />
+      <ImageView
+          android:layout_marginTop="@dimen/dp_112"
+          android:layout_gravity="center"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/group"/>
+      <TextView
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="@dimen/dp_16"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="选择操作"
+          android:textSize="@dimen/sp_24"/>
+    <TextView
+        android:id="@+id/tv_menu_readdata"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:layout_marginTop="@dimen/dp_32"
+        android:layout_marginStart="@dimen/dp_32"
+        android:layout_marginEnd="@dimen/dp_32"
+        android:background="@drawable/shape"
+        android:text="抄读数据"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_18"/>
+    <TextView
+        android:id="@+id/tv_menu_pushreport"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_32"
+        android:layout_marginEnd="@dimen/dp_32"
+        android:background="@drawable/shape2"
+        android:text="提交报告"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_18"/>
+</LinearLayout>

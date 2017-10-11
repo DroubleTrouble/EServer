@@ -20,9 +20,7 @@ class MeterQueryInfo : Serializable, Comparable<MeterQueryInfo> {
     var isSelected = false//是否选中
     var isProgressing = false//是否处理中
 
-    constructor() {
-
-    }
+    constructor()
 
     @JvmOverloads constructor(name: String, id: Int, subid: Int, para: Int = -1) {
         queryName = name

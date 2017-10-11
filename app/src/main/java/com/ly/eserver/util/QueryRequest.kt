@@ -32,7 +32,7 @@ class QueryRequest :AnkoLogger{
             return null
         }
         //获取检测的表计地址
-        value = meterAddrValue.getText().toString()
+        value = meterAddrValue.text.toString()
         //补零处理
         value = StringUtil.fillWith(value, '0', 12, false)
         //刷新表计地址

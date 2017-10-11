@@ -10,6 +10,7 @@ import java.util.*
 data class OperlogBean constructor(
         var operlogid: Int? = null, //主键
         var userid: Int? = null, //用户表外键
+        var projectid : Int? = null,
         var tableAddress: String? = null, //表地址
         var location: String? = null, //定位：200.101
         var address: String? = null, //地址，江苏省南京市鼓楼区
@@ -18,6 +19,4 @@ data class OperlogBean constructor(
         var result: String? = null, //抄读结果
         var issended : Boolean = false, //是否已发送到服务器
         var time: Date? = null   //时间：YYYY-MM-DD:HH-MM-SS
-) : Serializable {
-
-}
+) : Serializable

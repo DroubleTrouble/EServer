@@ -11,5 +11,5 @@ public interface BluetoothListener {
      * 接收监听
      * @param rev
      */
-    public void onBluetoothReceived(Message rev);
+    void onBluetoothReceived(Message rev);
 }

@@ -1,5 +1,6 @@
 package com.ly.eserver.app
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.content.ComponentName
@@ -24,6 +25,7 @@ class KotlinApplication : MobApplication() {
     companion object {
         private var instance: Application? = null
         var useridApp : Int = 0
+        var projectidApp : Int = 0
         var bind : BluetoothService.BluetoothBinder? = null
         fun instance() = instance!!
     }

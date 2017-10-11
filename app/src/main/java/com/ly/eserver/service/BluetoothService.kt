@@ -272,8 +272,8 @@ class BluetoothService : Service() ,AnkoLogger {
      * 关闭等待对话框
      */
         fun hideProgressDialog() {
-        val dialog : ProgressDialog? = ProgressDialog.getInstance();
-            if (dialog != null) {
+        val dialog : ProgressDialog? = ProgressDialog.getInstance()
+        if (dialog != null) {
                 dialog.dismiss()
             }
         }

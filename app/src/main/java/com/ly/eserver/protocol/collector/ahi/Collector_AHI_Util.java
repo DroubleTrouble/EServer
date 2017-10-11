@@ -208,8 +208,7 @@ public class Collector_AHI_Util {
         if (protocol[protocol.length - 1] != 0x16) return false;
         //校验校验位
         int check = updateCheckSum(protocol)[protocol.length - 2] & 0xFF;
-        if (check != (protocol[protocol.length - 2] & 0xFF)) return false;
-        return true;
+        return check == (protocol[protocol.length - 2] & 0xFF);
     }
 
     /**

@@ -81,13 +81,13 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
         rg_bluetooth_rate1.setOnCheckedChangeListener { radioGroup, i ->
            when(i){
                R.id.rb_bluetooth_rate28600 ->{
-                   if (rb_bluetooth_rate28600.isChecked()){
+                   if (rb_bluetooth_rate28600.isChecked){
                        rate = rb_bluetooth_rate28600.text.toString()
                        rg_bluetooth_rate2.clearCheck()
                    }
                }
                R.id.rb_bluetooth_rate11400->{
-                   if (rb_bluetooth_rate11400.isChecked()){
+                   if (rb_bluetooth_rate11400.isChecked){
                        rate = rb_bluetooth_rate11400.text.toString()
                        rg_bluetooth_rate2.clearCheck()
                    }
@@ -97,13 +97,13 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
         rg_bluetooth_rate2.setOnCheckedChangeListener { radioGroup, i ->
             when(i){
                 R.id.rb_bluetooth_rate9600->{
-                    if (rb_bluetooth_rate9600.isChecked()) {
+                    if (rb_bluetooth_rate9600.isChecked) {
                         rate = rb_bluetooth_rate9600.text.toString()
                         rg_bluetooth_rate1.clearCheck()
                     }
                 }
                 R.id.rb_bluetooth_rate3600->{
-                    if (rb_bluetooth_rate3600.isChecked()) {
+                    if (rb_bluetooth_rate3600.isChecked) {
                         rate = rb_bluetooth_rate3600.text.toString()
                         rg_bluetooth_rate1.clearCheck()
                     }
@@ -113,13 +113,13 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
         rg_bluetooth_vertify1.setOnCheckedChangeListener { radioGroup, i ->
             when(i){
                 R.id.rb_bluetooth_parity->{
-                    if (rb_bluetooth_parity.isChecked()) {
+                    if (rb_bluetooth_parity.isChecked) {
                         rg_bluetooth_vertify2.clearCheck()
                         vertify = rb_bluetooth_parity.text.toString()
                     }
                 }
                 R.id.rb_bluetooth_crc->{
-                    if (rb_bluetooth_crc.isChecked()){
+                    if (rb_bluetooth_crc.isChecked){
                         rg_bluetooth_vertify2.clearCheck()
                         vertify = rb_bluetooth_crc.text.toString()
                     }
@@ -129,7 +129,7 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
         rg_bluetooth_vertify2.setOnCheckedChangeListener { radioGroup, i ->
             when(i){
                 R.id.rb_bluetooth_redundancy->{
-                    if (rb_bluetooth_redundancy.isChecked()) {
+                    if (rb_bluetooth_redundancy.isChecked) {
                         vertify = rb_bluetooth_redundancy.text.toString()
                         rg_bluetooth_vertify1.clearCheck()
                     }
@@ -193,8 +193,8 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
     override fun onResume() {
         super.onResume()
         // 恢复蓝牙启动状态
-        if (DeviceControl.instance.bluetoothandler != null) {
-            DeviceControl.instance.bluetoothandler!!.service.resume()
+        if (DeviceControl.instance.mBluetooth != null) {
+            DeviceControl.instance.getBluetoothandler().service.resume()
         }
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 //        if (mBluetoothAdapter != null) {
@@ -228,11 +228,11 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
 
     override fun onPause() {
         super.onPause()
-        if (DeviceControl.instance.bluetoothandler != null) {
-            DeviceControl.instance.bluetoothandler!!.service.pause()
+        if (DeviceControl.instance.mBluetooth != null) {
+            DeviceControl.instance.getBluetoothandler().service.pause()
         }
         mHandler.removeMessages(BLUETOOTH_DISCOVERY)
-        if (mBluetoothAdapter != null && mBluetoothAdapter.isDiscovering())
+        if (mBluetoothAdapter != null && mBluetoothAdapter.isDiscovering)
             mBluetoothAdapter.cancelDiscovery()
     }
 
@@ -274,7 +274,7 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
                 val defaultName = mSharedPreferences.getString(DEFAULT_BLUETOOTH_NAME, "")
                 val defaultAddr = mSharedPreferences.getString(DEFAULT_BLUETOOTH_ADDR, "")
                 //若蓝牙已连接(无法再次被搜索到),手动添加至蓝牙设备列表
-                val handler = DeviceControl.instance.bluetoothandler
+                val handler = DeviceControl.instance.getBluetoothandler()
                 if (handler != null) {
                     val service = handler.service
                     if (service.status !== BluetoothService.BluetoothStatus.START || service.status !== BluetoothService.BluetoothStatus.STARTING) {
@@ -282,13 +282,13 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
                         if (socket != null) {
                             var isExist = false
                             for (device in bluetoothDeviceList) {
-                                if (device.name == socket.getRemoteDevice().getName() && device.address == socket.getRemoteDevice().getAddress()) {
+                                if (device.name == socket.remoteDevice.name && device.address == socket.remoteDevice.address) {
                                     isExist = true
                                     break
                                 }
                             }
                             if (!isExist) {
-                                bluetoothDeviceList.add(socket.getRemoteDevice())
+                                bluetoothDeviceList.add(socket.remoteDevice)
                             }
                         }
                     }
@@ -312,12 +312,13 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
                                     .putString(DEFAULT_BLUETOOTH_NAME, "")
                                     .putString(DEFAULT_BLUETOOTH_ADDR, "")
                                     .commit()
-                            val handler = DeviceControl.instance.bluetoothandler
+                            val handler = DeviceControl.instance.getBluetoothandler()
                             if (handler != null) {
-                                handler!!.service.stop()
+                                handler.service.stop()
                             }
                         }
 
+                        @SuppressLint("ApplySharedPref")
                         override fun onItemSelected(v: View, index: Int) {
                             if (bluetoothDeviceList == null || bluetoothDeviceList.size == 0 || bluetoothDeviceList.size <= index) {
                                 return
@@ -330,7 +331,7 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
                                     .putString(DEFAULT_BLUETOOTH_ADDR, device.address)
                                     .commit()
                             //建立蓝牙连接(预连接,设置窗口关闭后后建立真实连接)
-                            val handler: BluetoothService.BluetoothBinder = DeviceControl.instance.bluetoothandler!!
+                            val handler: BluetoothService.BluetoothBinder? = DeviceControl.instance.getBluetoothandler()
                             info("handler" + handler.toString())
                             if (handler != null) {
                                 val socket: BluetoothSocket
@@ -367,23 +368,23 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
                                             info("蓝牙绑定失败!")
                                         }
                                     }
-                                    when (handler!!.service.status) {
+                                    when (handler.service.status) {
                                         BluetoothService.BluetoothStatus.PAUSE ->
                                             //暂停状态下,查看暂停前状态
-                                            when (handler!!.service.preStatus) {
+                                            when (handler.service.preStatus) {
                                                 BluetoothService.BluetoothStatus.START, BluetoothService.BluetoothStatus.STARTING ->
                                                     //关闭旧连接
-                                                    handler!!.service.stop()
+                                                    handler.service.stop()
                                                 else -> {
                                                 }
                                             }
                                         BluetoothService.BluetoothStatus.START, BluetoothService.BluetoothStatus.STARTING ->
                                             //关闭旧连接
-                                            handler!!.service.stop()
+                                            handler.service.stop()
                                         else -> {
                                         }
                                     }
-                                    if (!handler!!.service.start(socket)) {
+                                    if (!handler.service.start(socket)) {
                                         info("蓝牙通信端口设置失败")
                                     } else {
                                         info("蓝牙通信端口设置成功")

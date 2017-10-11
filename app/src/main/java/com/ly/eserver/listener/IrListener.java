@@ -12,5 +12,5 @@ public interface IrListener {
 	 * 接收监听
 	 * @param rev
 	 */
-	public void onIrReceived(Message rev);
+    void onIrReceived(Message rev);
 }

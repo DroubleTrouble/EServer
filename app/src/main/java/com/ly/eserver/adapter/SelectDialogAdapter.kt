@@ -22,15 +22,15 @@ class SelectDialogAdapter : RecyclerView.Adapter<SelectDialogHolder>() {
     }
 
     override fun onBindViewHolder(holder: SelectDialogHolder?, position: Int) {
-        holder!!.textView.setText(list!!.get(position))
+        holder!!.textView.text = list.get(position)
     }
 
     override fun getItemCount(): Int {
-        return list!!.size
+        return list.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SelectDialogHolder {
-        val view = LayoutInflater.from(parent!!.getContext()).inflate(R.layout.dialog_select_list_item, parent, false)
+        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.dialog_select_list_item, parent, false)
         val holder = SelectDialogHolder(view, click!!)
         return holder
     }

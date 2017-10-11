@@ -31,6 +31,4 @@ data class ProjectBean constructor(
     val bookIncome: Double? = null,        //账面收入
     val remarks: String? = null            //备注
 
-): Serializable {
-
-}
+): Serializable

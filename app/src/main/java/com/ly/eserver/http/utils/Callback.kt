@@ -33,7 +33,6 @@ class Callback<T>(val mListener: HttpOnNextListener<Any?>) : Observer<T> ,AnkoLo
     }
 
     override fun onNext(value: T) {
-        info(value.toString())
         if (value is DataBean<*>) {
             onResponse(value)
         }
@@ -60,7 +59,7 @@ class Callback<T>(val mListener: HttpOnNextListener<Any?>) : Observer<T> ,AnkoLo
             mListener.onError()
             return
         }
-        if (!data.status.equals("200")) {
+        if (!data.status.equals("200")&&!data.status.equals("204")&&!data.status.equals("202")) {
             ToastUtils.showShort(data.mesg)
             mListener.onError()
             return

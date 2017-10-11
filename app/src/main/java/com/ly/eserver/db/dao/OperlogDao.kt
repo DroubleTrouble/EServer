@@ -19,11 +19,12 @@ class OperlogDao(var mContext: Context){
         dbOpenHelper = MyDatabaseOpenHelper(mContext)
     }
     private fun converDomain2Map(data: OperlogBean): MutableMap<String, Any?> {
-        var results = mutableMapOf<String, Any?>()
+        val results = mutableMapOf<String, Any?>()
         //难点2
         with(data){
             results[OperlogTable.OPERLOGID] = operlogid
             results[OperlogTable.USERID] = userid
+            results[OperlogTable.PROJECTID] = projectid
             results[OperlogTable.ADDRESS] = address
             results[OperlogTable.LOCATION] = location
             results[OperlogTable.TABLEADDRESS] = tableAddress
@@ -43,6 +44,7 @@ class OperlogDao(var mContext: Context){
                     OperlogTable.NAME,
                     OperlogTable.OPERLOGID,
                     OperlogTable.USERID,
+                    OperlogTable.PROJECTID,
                     OperlogTable.ADDRESS,
                     OperlogTable.LOCATION,
                     OperlogTable.TABLEADDRESS,
@@ -60,6 +62,8 @@ class OperlogDao(var mContext: Context){
                     val id = operlogid!!.toInt()
                     val userid = columns[OperlogTable.USERID] as Long?  //userid
                     val user = userid!!.toInt()
+                    val projectid = columns[OperlogTable.PROJECTID] as Long?  //projectid
+                    val project = projectid!!.toInt()
                     val ADDRESS = columns[OperlogTable.ADDRESS] as String?
                     val location = columns[OperlogTable.LOCATION] as String?
                     val tableaddress = columns[OperlogTable.TABLEADDRESS] as String?
@@ -71,7 +75,7 @@ class OperlogDao(var mContext: Context){
                     val time = columns[OperlogTable.TIME] as String?
                     val date = Date(time)
                     val result = columns[OperlogTable.RESULT] as String?
-                    return OperlogBean(id, user, tableaddress, location, ADDRESS, type, isfin,result,issend, date)
+                    return OperlogBean(id, user, project,tableaddress, location, ADDRESS, type, isfin,result,issend, date)
                 }
             })
         }

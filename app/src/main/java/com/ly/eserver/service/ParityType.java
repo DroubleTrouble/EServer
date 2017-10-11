@@ -32,7 +32,7 @@ public enum ParityType {
      *
      * @param value
      */
-    private ParityType(char value) {
+    ParityType(char value) {
         this.value = value;
     }
 }

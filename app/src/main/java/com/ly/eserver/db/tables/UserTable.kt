@@ -5,6 +5,7 @@ package com.ly.eserver.db.tables
  * Created by Max on 2017/7/25.
  */
 object UserTable {
+    val USERNO = "userno"
     val NAME = "User"
     val USERID = "userid"
     val USERNAME = "username"

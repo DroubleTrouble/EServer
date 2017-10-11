@@ -7,5 +7,4 @@ import shinetechzz.com.vcleaders.presenter.base.BasePresenter
 /**
  * Created by Max on 2017/8/1.
  */
-class ReimbursementActivityPresenterImpl  : BasePresenter<ReimbursementActivityPresenter.View>() {
-}
+class ReimbursementActivityPresenterImpl  : BasePresenter<ReimbursementActivityPresenter.View>()

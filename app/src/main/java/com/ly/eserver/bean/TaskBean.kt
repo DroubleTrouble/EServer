@@ -14,6 +14,4 @@ data class TaskBean constructor(
     val isIsadd: Boolean = false,        //是否新增
     val starttime: Date? = null,        //开始时间
     val endtime: Date? = null        //结束时间
-): Serializable {
-
-}
+): Serializable

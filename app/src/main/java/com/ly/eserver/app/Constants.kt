@@ -17,6 +17,8 @@ interface Constants {
         val STATE_EMPTY = 1005
         val STATE_SUCCESS = 1006
 
+        val QINIU_API = "http://ov6m80kxi.bkt.clouddn.com/"
+
         //支持规约类型
         /**
          * DLT645-2007

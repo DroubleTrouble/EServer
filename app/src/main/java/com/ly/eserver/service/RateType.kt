@@ -11,7 +11,7 @@ enum class RateType
 
  * @param value
  */
-private constructor(val value: Int) {
+(val value: Int) {
     RATE_600(600),
     RATE_1200(1200),
     RATE_2400(2400),

@@ -9,12 +9,11 @@ import java.util.*
  */
 data class DescriptionBean constructor(
         val descripid: Int = 0, //主键
-        val userid: Int = 0, //用戶表外鍵
-        val location: String? = null, //定位：200.101
-        val picture1: String? = null, //图片地址
-        val picture2: String? = null, //图片地址
-        val description: String? = null, //说明
-        val time: Date? = null   //时间：YYYY-MM-DD:HH-MM-SS
-) : Serializable {
-
-}
+        var userid: Int = 0, //用戶表外鍵
+        var projectid : Int? = null,
+        var location: String? = null, //定位：200.101
+        var picture1: String? = null, //图片地址
+        var picture2: String? = null, //图片地址
+        var description: String? = null, //说明
+        var time: Date? = null   //时间：YYYY-MM-DD:HH-MM-SS
+) : Serializable

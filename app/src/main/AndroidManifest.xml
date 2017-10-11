@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <!--地图权限-->
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
@@ -53,7 +54,7 @@
         <activity android:name=".ui.activity.RetrievePwdActivity" />
         <activity android:name=".ui.activity.BlueToothActivity" />
         <activity android:name=".ui.activity.ReadDataActivity" />
-
+        <activity android:name=".ui.activity.MenuActivity" />
         <activity android:name=".ui.activity.ReimbursementActivity" />
         <activity android:name=".ui.activity.PersonLogActivity" />
         <activity android:name=".ui.activity.DescriptionActivity" />
@@ -66,27 +67,34 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="PVYZ1Ak28anGwGVt1GrXnluDNvTaWxjx" />
+            android:value="UH6j7XDAd5psPdH8E95XZlLF7jFP7aSZ"/>
         <meta-data
             android:name="Mob-AppKey"
-            android:value="1fb5736107964" />
+            android:value="1fb5736107964"/>
         <meta-data
             android:name="Mob-AppSecret"
             android:value="5476e1761a6f2505040f4566ff2f3870" />
-
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" />
         <!-- 蓝牙服务 -->
         <service
             android:name="com.ly.eserver.service.BluetoothService"
-            android:exported="false">
+            android:exported="false"
+            android:permission="android.permission.BLUETOOTH">
             <intent-filter>
-                <action android:name="sht.service.BluetoothService" />
+                <action android:name="com.ly.eserver.service.BluetoothService" />
                 <category android:name="android.intent.category.default" />
             </intent-filter>
         </service>
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:permission="android.permission.BAIDU_LOCATION_SERVICE"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="com.baidu.location.service_v2.2" />
+            </intent-filter>
+        </service>
+         
+
     </application>
 
 </manifest>

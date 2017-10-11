@@ -34,16 +34,18 @@ import kotlin.experimental.or
 class DeviceControl(private val mContext: Context) : IrListener, SerialListener, BluetoothListener ,AnkoLogger {
 
     private val deviceListenerList: MutableList<DeviceListener>
-
     private val deviceSet: SharedPreferences
     private var deviceStatus = false
+    var mBluetooth: BluetoothService.BluetoothBinder? = null
 
     /**
      * 获取蓝牙操作句柄
      * @return
      */
-    var bluetoothandler: BluetoothBinder? = null
-        set
+    fun getBluetoothandler(): BluetoothService.BluetoothBinder {
+        return mBluetooth!!
+    }
+
     private var blueToothRate = -1
     private var blueToothParity = -1
     private var blueToothStop = -1f
@@ -91,10 +93,10 @@ class DeviceControl(private val mContext: Context) : IrListener, SerialListener,
      * @param binder
      */
     fun setBluetoothHandler(binder: BluetoothBinder) {
-        bluetoothandler = binder
-        if (bluetoothandler != null) {
+        mBluetooth = binder
+        if (mBluetooth != null) {
             //设置数据监听
-            bluetoothandler!!.service.setDeviceListener(this)
+            mBluetooth!!.service.setDeviceListener(this)
         }
     }
 
@@ -159,7 +161,7 @@ class DeviceControl(private val mContext: Context) : IrListener, SerialListener,
             -> {
                 blueToothRate = rate.value
                 blueToothParity = parity.value.toInt()
-                blueToothStop = stop.getValue()
+                blueToothStop = stop.value
             }
         }
     }
@@ -263,21 +265,21 @@ class DeviceControl(private val mContext: Context) : IrListener, SerialListener,
 
             Constants.QUERY_BLUETOOTH ->  {
                 if (KotlinApplication.bind != null){
-                    bluetoothandler = KotlinApplication.bind
+                    mBluetooth = KotlinApplication.bind
                 }
-                info("write"+bluetoothandler.toString())
-                if(bluetoothandler != null){
+                info("write"+mBluetooth.toString())
+                if(mBluetooth != null){
                     //组合蓝牙发送报文
                     if (blueToothRate != -1 && blueToothParity != -1 ) {
                         //临时设定
-                        status = bluetoothandler!!.service.write(
+                        status = mBluetooth!!.service.write(
                                 DeviceControl.getBluetoothRequest(
                                         data,
                                         RateType.fromValue(blueToothRate),
                                         ParityType.fromValue(blueToothParity)))
                     } else {
                         //系统设定
-                        status = bluetoothandler!!.service.write(DeviceControl.getBluetoothRequest(data,
+                        status = mBluetooth!!.service.write(DeviceControl.getBluetoothRequest(data,
                                 RateType.fromValue(deviceSet.getInt(BluetoothSet.QUERY_RATE, -1)),
                                 ParityType.fromValue(deviceSet.getInt(BluetoothSet.QUERY_PARITY, -1))))
                     }

@@ -19,6 +19,7 @@ class UserDao(var mContext: Context) : AnkoLogger{
         var result = mutableMapOf<String, Any?>()
         //难点2
         with(data){
+            result[UserTable.USERNO] = userno
             result[UserTable.USERID] = userid
             result[UserTable.USERNAME] = username
             result[UserTable.PASSWORD] = password
@@ -49,6 +50,7 @@ class UserDao(var mContext: Context) : AnkoLogger{
         dbOpenHelper.use {
             val selectQueryBuilder = select(
                     UserTable.NAME,
+                    UserTable.USERNO,
                     UserTable.USERID,
                     UserTable.USERNAME,
                     UserTable.PASSWORD,
@@ -62,6 +64,8 @@ class UserDao(var mContext: Context) : AnkoLogger{
             //难点4
             user = selectQueryBuilder.parseOpt(object : MapRowParser<UserBean> {
                 override fun parseRow(columns: Map<String, Any?>): UserBean {
+                    val userno = columns[UserTable.USERNO] as Long? //项目号
+                    val no = userno!!.toInt()
                     val username = columns[UserTable.USERNAME] as String?
                     val password = columns[UserTable.PASSWORD] as String?  //密码
                     val projectid = columns[UserTable.PROJECTID] as Long? //项目号
@@ -70,7 +74,7 @@ class UserDao(var mContext: Context) : AnkoLogger{
                     val PIN2 = columns[UserTable.PIN2] as String? //设备号2
                     val department= columns[UserTable.DEPARTMENT] as String?    //部门
                     val projectid2 :Int = projectid!!.toInt()
-                    return UserBean(id, username, password, projectid2, phone, PIN1, PIN2, department)
+                    return UserBean(no,id, username, password, projectid2, phone, PIN1, PIN2, department)
                 }
             })
         }

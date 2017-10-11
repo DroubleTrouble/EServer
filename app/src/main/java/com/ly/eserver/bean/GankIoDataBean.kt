@@ -18,7 +18,5 @@ data class GankIoDataBean constructor(val isError: Boolean = false, val results:
                           val url: String? = null,
                           val isUsed: Boolean = false,
                           val who: String? = null,
-                          val images: List<String>? = null) : Serializable {
-
-    }
+                          val images: List<String>? = null) : Serializable
 }

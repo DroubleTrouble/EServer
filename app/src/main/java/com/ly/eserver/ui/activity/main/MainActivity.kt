@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Point
 import android.os.Message
+import android.view.KeyEvent
 import android.view.WindowManager
 import com.baidu.location.BDLocation
-import com.baidu.location.BDLocationListener
 import com.baidu.mapapi.SDKInitializer
 import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
@@ -15,64 +15,104 @@ import com.blankj.utilcode.util.ToastUtils
 import com.ly.eserver.R
 import com.ly.eserver.app.Constants
 import com.ly.eserver.app.KotlinApplication
+import com.ly.eserver.bean.CheckBean
 import com.ly.eserver.bean.ProjectBean
 import com.ly.eserver.bean.UserBean
 import com.ly.eserver.db.dao.UserDao
 import com.ly.eserver.presenter.MainActivityPresenter
 import com.ly.eserver.presenter.impl.MainActivityPresenterImpl
-import com.ly.eserver.service.LocationService
+import com.ly.eserver.service.LocationHelper
 import com.ly.eserver.ui.activity.BlueToothActivity
 import com.ly.eserver.ui.activity.ChangePwdActivity
-import com.ly.eserver.ui.activity.ReadDataActivity
+import com.ly.eserver.ui.activity.MenuActivity
 import com.ly.eserver.ui.activity.ReimbursementActivity
 import com.ly.eserver.ui.activity.base.BaseActivity
 import kotlinx.android.synthetic.main.menu_content_home.*
 import kotlinx.android.synthetic.main.menu_left_profile.*
 import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
+import java.util.*
+import android.widget.Toast
+import android.view.KeyEvent.KEYCODE_BACK
+import com.baidu.mapapi.map.BitmapDescriptorFactory
+import com.baidu.mapapi.map.BitmapDescriptor
+import com.baidu.mapapi.map.MyLocationConfiguration
+import com.baidu.mapapi.map.MyLocationData
+
+
+
+
+
+
 
 
 /**
+ * 主页面
+ * 有无法定位的情况。这时操作记录要怎么办？
  * Created by zengwendi on 2017/6/12.
  */
 class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseActivity<MainActivityPresenterImpl>(),
-        MainActivityPresenter.View {
+        MainActivityPresenter.View, LocationHelper.LocationCallBack {
+
+
+    val userDao: UserDao = UserDao(this)
+    lateinit var user: UserBean
+    var check: CheckBean = CheckBean()
+    var main_BDlocation: BDLocation? = null
+    lateinit var baiduMap: BaiduMap
+    lateinit var helper: LocationHelper
+
+
+    override fun initData() {
+        mPresenter = MainActivityPresenterImpl()
+        SDKInitializer.initialize(KotlinApplication.instance())
+
+    }
+
+    override fun loadData() {
+        user = userDao.queryUser(KotlinApplication.useridApp)!!
+        if (user.projectid != 0) {
+            mPresenter.findProject(user.projectid!!)
+        }
+        check.userid = user.userid!!
+        mPresenter.findCheckByIdAndTime(check)
+        mLoadingPage!!.state = Constants.Companion.STATE_SUCCESS
+        mLoadingPage!!.showPage()
+
+    }
+
+    override fun refreshView(mData: Any?) {
+
+//            tv_profile_project.text = mData.abbreviation
+        if (mData is ProjectBean) {
+            tv_profile_project.text = mData.abbreviation
+            info("mData is ProjectBean")
+
+        } else if (mData is Boolean) {
+            tv_profile_check.text = "今日已签到"
+        } else {
+            ll_profile_checkin.setOnClickListener {
+                ToastUtils.showShort("签到成功！")
+                tv_profile_check.text = "今日已签到"
+                check.userid = user.userid!!
+                check.address = main_BDlocation!!.locationDescribe
+                check.location = main_BDlocation!!.latitude.toString() + "/" + main_BDlocation!!.longitude.toString()
+                check.ischeck = true
+                check.time = Date(System.currentTimeMillis())
+                mPresenter.insertCheck(check)
+            }
+        }
+    }
+
+
     override fun onHandlerReceive(msg: Message) {
     }
 
     override fun onBroadcastReceive(context: Context, intent: Intent) {
     }
 
-    val userDao: UserDao = UserDao(this)
-    lateinit var user: UserBean
-    lateinit var locationService: LocationService
-    lateinit var myListener: BDLocationListener
-    lateinit var mBaiduMap: BaiduMap
-    var main_BDlocation: BDLocation? = null
-    var isFirstLoc: Boolean = true
-
-    override fun refreshView(data: ProjectBean) {
-        tv_profile_project.text = data.abbreviation
-    }
-
-    override fun initData() {
-        mPresenter = MainActivityPresenterImpl()
-        SDKInitializer.initialize(getApplicationContext())
-
-    }
-
-    override fun loadData() {
-        user = userDao.queryUser(KotlinApplication.useridApp)!!
-        info("user!-------------" + user.toString())
-        if (user.projectid != 0) {
-            mPresenter.findProject(user.projectid!!)
-        } else {
-            mLoadingPage!!.state = Constants.Companion.STATE_SUCCESS
-            mLoadingPage!!.showPage()
-        }
-    }
-
     override fun initView() {
+
         //左边profile页面
         tv_profile_username.text = user.username
         tv_profile_department.text = user.department
@@ -82,59 +122,60 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
         }
         ll_profile_changepwd.setOnClickListener {
             startActivity<ChangePwdActivity>()
-            locationService.stop()
 
         }
         ll_profile_bluetooth.setOnClickListener {
             startActivity<BlueToothActivity>()
-            locationService.stop()
 
         }
         ll_profile_log.setOnClickListener {
-            startActivity<ReimbursementActivity>("location" to main_BDlocation!!.locationDescribe)
-            locationService.stop()
-
+            if (main_BDlocation != null) {
+                startActivity<ReimbursementActivity>("location" to main_BDlocation!!.locationDescribe)
+            }else{
+                startActivity<ReimbursementActivity>("location" to "")
+            }
         }
+        baiduMap = mv_menuContent_map.map
+
         //地图页面
-        mBaiduMap = mv_menuContent_map.map
-        initMap()
+        startLocation()
+
         iv_menuContent_location.setOnClickListener {
-            if (mBaiduMap.locationConfiguration.locationMode == MyLocationConfiguration.LocationMode.COMPASS) {
-                mBaiduMap.setMyLocationConfiguration(
+            if (baiduMap.locationConfiguration.locationMode == MyLocationConfiguration.LocationMode.COMPASS) {
+                baiduMap.setMyLocationConfiguration(
                         MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null))
                 val builder1 = MapStatus.Builder()
                 builder1.overlook(0f)
-                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder1.build()))
+                baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder1.build()))
                 info("切换为following模式")
-
             } else {
-                mBaiduMap.uiSettings.setOverlookingGesturesEnabled(false)
-                mBaiduMap.setMyLocationConfiguration(
+                baiduMap.uiSettings.setOverlookingGesturesEnabled(false)
+                baiduMap.setMyLocationConfiguration(
                         MyLocationConfiguration(MyLocationConfiguration.LocationMode.COMPASS, true, null))
                 val builder1 = MapStatus.Builder()
                 builder1.overlook(0f)
-                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder1.build()))
+                baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder1.build()))
                 info("切换为compass模式")
             }
-            locationService.registerListener(myListener)
-            locationService.start()
+            startLocation()
         }
+
+
         val bluetooth = BluetoothAdapter.getDefaultAdapter()
-//        if (bluetooth.isEnabled) {
-//            iv_menuContent_bluetooth.setImageResource(R.drawable.close_bluet)
-//        }
+        if (bluetooth.isEnabled) {
+            iv_menuContent_bluetooth.setImageResource(R.drawable.close_bluet)
+        }
         ll_menucontent_startdata.setOnClickListener {
-            locationService.stop()
-            locationService.unregisterListener(myListener)
+
 
             if (!bluetooth.isEnabled) {
                 ToastUtils.showShort("蓝牙未开启,请打开蓝牙设备!")
                 startActivity<BlueToothActivity>()
             } else {
                 if (main_BDlocation != null) {
-                    startActivity<ReadDataActivity>("location" to main_BDlocation!!)
+                    startActivity<MenuActivity>("location" to main_BDlocation!!)
                 } else {
-                    startActivity<ReadDataActivity>("location" to "")
+                    startActivity<MenuActivity>("location" to "")
                 }
             }
         }
@@ -142,54 +183,28 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
 
     override fun onResume() {
         super.onResume()
+        mv_menuContent_map.onResume()
         val bluetooth = BluetoothAdapter.getDefaultAdapter()
-        if (bluetooth.isEnabled) {
-            iv_menuContent_bluetooth.setImageResource(R.drawable.close_bluet)
-        } else {
-            iv_menuContent_bluetooth.setImageResource(R.drawable.open_bluet)
+        if (iv_menuContent_bluetooth != null) {
+            if (bluetooth.isEnabled) {
+                iv_menuContent_bluetooth.setImageResource(R.drawable.close_bluet)
+            } else {
+                iv_menuContent_bluetooth.setImageResource(R.drawable.open_bluet)
+            }
         }
-        locationService.registerListener(myListener)
-        locationService.start()
+
     }
 
     override fun onPause() {
         super.onPause()
-        locationService.unregisterListener(myListener)
-        locationService.stop()
+        mv_menuContent_map.onPause()
     }
 
     override fun onDestroy() {
+        helper.stop();
+        baiduMap.setMyLocationEnabled(false);
+        mv_menuContent_map.onDestroy();
         super.onDestroy()
-        locationService.unregisterListener(myListener)
-        locationService.stop()
-    }
-
-    internal fun initMap() {
-        val wm1: WindowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val width: Int = wm1.getDefaultDisplay().width
-        val height: Int = wm1.getDefaultDisplay().height
-//        mBaiduMap = mv_menuContent_map.map
-        mBaiduMap.isMyLocationEnabled = true
-        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(MapStatus.Builder().zoom(18f).build()))
-        mBaiduMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
-            mv_menuContent_map.setZoomControlsPosition(Point(width - 150, height - 500))
-        })
-        //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
-        locationService = LocationService(applicationContext)
-        //创建监听对象
-        myListener = MyLocationListener()
-        //注册监听
-        locationService.registerListener(myListener)
-        mBaiduMap.setMyLocationConfiguration(
-                MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null))
-
-//        val type: Int = getIntent().getIntExtra("from", 0)
-//        if (type == 0) {
-            locationService.setLocationOption(locationService.defaultLocationClientOption)
-//        } else if (type == 1) {
-//            locationService.setLocationOption(locationService.option)
-//        }
-        locationService.start()
 
     }
 
@@ -201,25 +216,59 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
         startActivity(intent)
     }
 
-    //定位当前位置-----------------------------------
-    inner class MyLocationListener : BDLocationListener {
+    //退出时的时间
+    private var mExitTime: Long = 0
 
-        override fun onReceiveLocation(location: BDLocation?) {
+    //对返回键进行监听
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
 
-            if (location == null) {
-                return
-            }
-            main_BDlocation = location
-            val locData = MyLocationData.Builder().accuracy(location.radius).direction(100f)
-                    .latitude(location.latitude).longitude(location.longitude).build()
-            mBaiduMap.setMyLocationData(locData)
-            if (isFirstLoc) {
-                isFirstLoc = false
-                val ll = LatLng(location.latitude, location.longitude)
-                val u = MapStatusUpdateFactory.newLatLng(ll)
-                mBaiduMap.animateMapStatus(u)
-            }
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() === 0) {
+
+            exit()
+            return true
         }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    fun exit() {
+        if (System.currentTimeMillis() - mExitTime > 2000) {
+            Toast.makeText(this@MainActivity, "再按一次退出应用", Toast.LENGTH_SHORT).show()
+            mExitTime = System.currentTimeMillis()
+        } else {
+            finish()
+            System.exit(0)
+        }
+    }
+    //百度地图设置
+    fun setBaiduMap() {
+        val wm1: WindowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val width: Int = wm1.getDefaultDisplay().width
+        val height: Int = wm1.getDefaultDisplay().height
+//        baiduMap = mv_menuContent_map.map
+        baiduMap.isMyLocationEnabled = true
+        baiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(MapStatus.Builder().zoom(18f).build()))
+        baiduMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
+            mv_menuContent_map.setZoomControlsPosition(Point(width - 150, height - 500))
+        })
+        baiduMap.setMyLocationConfiguration(MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null))
+        val locData = MyLocationData.Builder().accuracy(main_BDlocation!!.radius).direction(100f)
+                .latitude(main_BDlocation!!.latitude).longitude(main_BDlocation!!.longitude).build()
+        baiduMap.setMyLocationData(locData)
+        val ll = LatLng(main_BDlocation!!.latitude, main_BDlocation!!.longitude)
+        val u = MapStatusUpdateFactory.newLatLng(ll)
+        baiduMap.animateMapStatus(u)
+    }
+
+    override fun callBack(bdLocation: BDLocation) {
+        main_BDlocation = bdLocation
+        setBaiduMap()
+    }
+
+    //开启定位
+    fun startLocation() {
+        helper = LocationHelper.instance
+        helper.callBack = this
+        helper.start();
     }
 
 

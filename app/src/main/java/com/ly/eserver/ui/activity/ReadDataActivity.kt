@@ -1,8 +1,8 @@
 package com.ly.eserver.ui.activity
 
-import android.bluetooth.BluetoothAdapter
-import android.content.*
-import android.os.IBinder
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Message
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -16,15 +16,13 @@ import com.ly.eserver.db.dao.OperlogDao
 import com.ly.eserver.listener.DeviceListener
 import com.ly.eserver.presenter.ReadDataActivityPresenter
 import com.ly.eserver.presenter.impl.ReadDataActivityPresenterImp
-import com.ly.eserver.service.*
+import com.ly.eserver.service.DeviceControl
 import com.ly.eserver.ui.activity.base.BaseActivity
 import com.ly.eserver.ui.widgets.ProgressDialog
-import com.ly.eserver.util.BluetoothSet
 import com.ly.eserver.util.ParseUtil
 import com.ly.eserver.util.QueryRequest
 import com.ly.eserver.util.StringUtil
 import kotlinx.android.synthetic.main.activity_readdata.*
-import kotlinx.android.synthetic.main.dialog_select_list_item.view.*
 import kotlinx.android.synthetic.main.item_titlebar.*
 import org.jetbrains.anko.info
 import java.nio.ByteBuffer
@@ -53,7 +51,7 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
     val REQUEST_TIMEOUT_VALUE: Long = 15 * 1000//请求超时时间
     var operlogDao : OperlogDao = OperlogDao(this@ReadDataActivity)
     var operlog : OperlogBean = OperlogBean()
-    lateinit var main_BDlocation: BDLocation
+    var main_BDlocation: BDLocation? = null
 
 
     override fun refreshView(mData: Any?) {
@@ -167,7 +165,7 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
     override fun onDeviceReceiver(rev: Message?): Boolean {
         info("onDeviceReceiver:" + StringUtil.bufferToHex(rev!!.obj as ByteArray?))
         if (rev.obj is ByteArray) {
-            var response: ByteArray? = null;
+            var response: ByteArray? = null
             //根据当前选择的表计类型获取数据集
             response = ParseUtil.checkDLT645Receive(revBuffer, rev.obj as ByteArray?)
 
@@ -177,9 +175,9 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
             //保存接收数据
 //            DbUtil.addLogInfo(LogInfo.LOG_TYPE.REV,StringUtil.bufferToHex(response));
             //处理通过,进行帧处理
-            mHandler.sendMessage(mHandler.obtainMessage(ON_PARSE_RECEIVED, response));
+            mHandler.sendMessage(mHandler.obtainMessage(ON_PARSE_RECEIVED, response))
         }
-        return false;
+        return false
 
     }
 
@@ -194,10 +192,11 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         ll_titlebar_close.visibility = LinearLayout.GONE
         if (intent.extras.get("location").toString() != "") {
             main_BDlocation = intent.extras.get("location") as BDLocation
-            operlog.address = main_BDlocation.locTypeDescription
-            operlog.location = main_BDlocation.latitude.toString() + "/" + main_BDlocation.longitude.toString()
+            operlog.address = main_BDlocation!!.locTypeDescription
+            operlog.location = main_BDlocation!!.latitude.toString() + "/" + main_BDlocation!!.longitude.toString()
         }
         operlog.userid = KotlinApplication.useridApp
+        operlog.projectid = KotlinApplication.projectidApp
 
     }
 
@@ -207,12 +206,12 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         ll_titlebar_back.setOnClickListener {
             finish()
         }
-        dataList.add("协议645/07");
-        dataList.add("协议645/97");
-        dataList.add("协议376.1");
+        dataList.add("协议645/07")
+        dataList.add("协议645/97")
+        dataList.add("协议376.1")
         adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, dataList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        sp_readdata_tableType.setAdapter(adapter)
+        sp_readdata_tableType.adapter = adapter
 
         bt_readdata_startreaddata.setOnClickListener {
             operlog.time = Date(System.currentTimeMillis())//获取当前时间
@@ -236,9 +235,9 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         super.onResume()
         mContext = this@ReadDataActivity
         // 恢复蓝牙启动状态
-        DeviceControl.instance.bluetoothandler = KotlinApplication.bind
-        if (DeviceControl.instance.bluetoothandler != null) {
-            DeviceControl.instance.bluetoothandler!!.service.resume()
+        DeviceControl.instance.setBluetoothHandler(KotlinApplication.bind!!)
+        if (DeviceControl.instance.getBluetoothandler() != null) {
+            DeviceControl.instance.getBluetoothandler()!!.service.resume()
         }
         //启用设备
         if (mDeviceControl == null)
@@ -252,8 +251,8 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         //停用设备
         if (mDeviceControl == null)
             mDeviceControl = DeviceControl.instance
-        mDeviceControl!!.toggle(false);
-        mDeviceControl!!.unregisterDeviceListener(this);
+        mDeviceControl!!.toggle(false)
+        mDeviceControl!!.unregisterDeviceListener(this)
 
     }
 

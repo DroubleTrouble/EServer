@@ -24,6 +24,4 @@ data class PersonlogBean constructor(
         var others: Double? = null,   //其它费用
         var personlog: String? = null,    //个人日志内容
         var time: Date? = null        //创建时间
-): Serializable {
-
-}
+): Serializable

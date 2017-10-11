@@ -97,9 +97,9 @@ public class DLT645_2007 extends DLT645_Parse {
         info.setAmmAddrByte(addr);
         //解析控制码
         byte c = parseData[8];
-        info.isReceived = (c & 0x80) > 0 ? true : false;
-        info.isReceiveCur = (c & 0x40) > 0 ? false : true;
-        info.haveFollow = (c & 0x20) > 0 ? true : false;
+        info.isReceived = (c & 0x80) > 0;
+        info.isReceiveCur = (c & 0x40) <= 0;
+        info.haveFollow = (c & 0x20) > 0;
         info.conCode = (byte) (c & 0x1F);
         //获取数据
         info.dataLen = parseData[9] & 0xFF;
@@ -1018,7 +1018,6 @@ public class DLT645_2007 extends DLT645_Parse {
             case 0:
                 //解析日期及周次
                 if (data.length < 4) throw new PacketLengthException(4);
-                ;
                 sb.append(parseNumData(data[0])).append("年");
                 sb.append(parseNumData(data[1])).append("月");
                 sb.append(parseNumData(data[2])).append("日 ");
@@ -1050,7 +1049,6 @@ public class DLT645_2007 extends DLT645_Parse {
             case 1:
                 //解析时间
                 if (data.length < 2) throw new PacketLengthException(2);
-                ;
                 sb.append(parseNumData(data[0])).append(":");
                 sb.append(parseNumData(data[1])).append(":");
                 sb.append(parseNumData(data[2]));

@@ -21,7 +21,7 @@ abstract class LoadingPage(val mContext: Context, attrs: AttributeSet? = null, d
     var state = com.ly.eserver.app.Constants.Companion.STATE_UNKNOWN
 
     init {
-        init();
+        init()
     }
 
     fun init() {

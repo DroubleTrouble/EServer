@@ -3,6 +3,7 @@ package com.ly.eserver.http.service
 import com.ly.eserver.bean.*
 import io.reactivex.Observable
 import retrofit2.http.*
+import java.util.*
 
 /**
  * Created by quantan.liu on 2017/3/22.
@@ -34,10 +35,15 @@ interface EService {
     @POST("personlog/insert")
     fun insertPersonlog(@Body personlogBean: PersonlogBean):Observable<DataBean<PersonlogBean>>
 
-    @Multipart
     @POST("description/insert")
     fun insertDescription(@Body descriptionBean: DescriptionBean) : Observable<DataBean<DescriptionBean>>
 
     @GET("description/qiniu_token")
     fun getQiniuToken() : Observable<DataBean<String>>
+
+    @POST("check/findByIdAndTime")
+    fun findCheckByIdAndTime(@Body checkBean: CheckBean) : Observable<DataBean<Boolean>>
+
+    @POST("check/insert")
+    fun insertCheck(@Body checkBean: CheckBean) : Observable<DataBean<CheckBean>>
 }

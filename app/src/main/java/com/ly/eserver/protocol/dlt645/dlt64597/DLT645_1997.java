@@ -170,9 +170,9 @@ public class DLT645_1997 extends DLT645_Parse {
         info.setAmmAddrByte(addr);
         //解析控制码
         byte c = parseData[8];
-        info.isReceived = (c & 0x80) > 0 ? true : false;
-        info.isReceiveCur = (c & 0x40) > 0 ? false : true;
-        info.haveFollow = (c & 0x20) > 0 ? true : false;
+        info.isReceived = (c & 0x80) > 0;
+        info.isReceiveCur = (c & 0x40) <= 0;
+        info.haveFollow = (c & 0x20) > 0;
         info.conCode = (byte) (c & 0x1F);
         info.dataLen = parseData[9] & 0xFF;
         info.resultData = new byte[info.dataLen];

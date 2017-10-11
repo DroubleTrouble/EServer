@@ -51,13 +51,13 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
             }
         }
         intentFilter = IntentFilter()
-        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);//搜索发现设备
-        intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);//状态改变
-        intentFilter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);//行动扫描模式改变了
-        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);//动作状态发生了变化
-        registerReceiver(mBroadcastReceiver, intentFilter);
+        intentFilter.addAction(BluetoothDevice.ACTION_FOUND)//搜索发现设备
+        intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED)//状态改变
+        intentFilter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED)//行动扫描模式改变了
+        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)//动作状态发生了变化
+        registerReceiver(mBroadcastReceiver, intentFilter)
         initData()
-        mPresenter!!.attachView(this)
+        mPresenter.attachView(this)
         mLoadingPage = object : LoadingPage(this) {
             override fun initView() {
                 this@BaseActivity.initView()
@@ -77,7 +77,7 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
 
     //用于监听rxjava防止内存泄露
     override fun bindSubscription(disposable: Disposable) {
-        mCompositeDisposable!!.add(disposable)
+        mCompositeDisposable.add(disposable)
     }
 
 
@@ -131,7 +131,7 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
         if (mCompositeDisposable != null && mCompositeDisposable.isDisposed) {
             mCompositeDisposable.dispose()
         }
-        mPresenter!!.detachView()
+        mPresenter.detachView()
         mHandler.removeCallbacksAndMessages(null)
     }
 
@@ -144,7 +144,7 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
             val bluetooth = BluetoothAdapter.getDefaultAdapter()
             if (bluetooth.isEnabled) {
                 //蓝牙开启
-                val handler = DeviceControl.instance.bluetoothandler
+                val handler = DeviceControl.instance.getBluetoothandler()
                 if (handler != null) {
                     //蓝牙服务开启
                     val status = handler.service.status

@@ -54,7 +54,7 @@ class PersonLogActivity(override val layoutId: Int = R.layout.activity_personlog
                 ToastUtils.showShort("工作内容不能为空")
             }else{
                 personlog.personlog = et_personlog_content.text.toString()
-                personlog.time = Date(System.currentTimeMillis());//获取当前时间
+                personlog.time = Date(System.currentTimeMillis())//获取当前时间
                 mPresenter.insertPersonlog(personlog)
             }
         }

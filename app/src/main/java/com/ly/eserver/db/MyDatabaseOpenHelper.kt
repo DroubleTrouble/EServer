@@ -16,7 +16,7 @@ class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatab
         @Synchronized
         fun getInstance(ctx: Context): MyDatabaseOpenHelper {
             if (instance == null) {
-                instance = MyDatabaseOpenHelper(ctx.getApplicationContext())
+                instance = MyDatabaseOpenHelper(ctx.applicationContext)
             }
             return instance!!
         }
@@ -25,7 +25,8 @@ class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatab
     override fun onCreate(db: SQLiteDatabase) {
         // 创建数据库
         db.createTable(UserTable.NAME, true,
-                UserTable.USERID to INTEGER + PRIMARY_KEY,
+                UserTable.USERNO to INTEGER + PRIMARY_KEY,
+                UserTable.USERID to INTEGER,
                 UserTable.USERNAME to TEXT,
                 UserTable.PASSWORD to TEXT,
                 UserTable.PHONE to TEXT,
@@ -38,6 +39,7 @@ class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatab
             db.execSQL("CREATE TABLE IF NOT EXISTS `" + NAME + "`(" +
                     OperlogTable.OPERLOGID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     OperlogTable.USERID + " INTEGER, " +
+                    OperlogTable.PROJECTID + " INTEGER, " +
                     OperlogTable.TABLEADDRESS + " TEXT," +
                     OperlogTable.LOCATION + " TEXT," +
                     OperlogTable.ADDRESS + " TEXT," +
@@ -53,8 +55,8 @@ class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatab
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // 如果需要的话，在这里升级数据库
-        db?.dropTable(UserTable.NAME, true)
-        db?.dropTable(OperlogTable.NAME, true)
+        db.dropTable(UserTable.NAME, true)
+        db.dropTable(OperlogTable.NAME, true)
         onCreate(db)
     }
 }

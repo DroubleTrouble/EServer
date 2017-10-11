@@ -51,9 +51,7 @@ public class DLT645_Parse {
         checkLen = Len - 2;
         cs = data[checkLen];
         byte sum = checkSum(data, dataHeadIndex, checkLen);
-        if (cs != sum)
-            return false;
-        return true;
+        return cs == sum;
     }
 
     /**

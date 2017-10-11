@@ -12,5 +12,5 @@ public interface SerialListener {
 	 * 接收监听
 	 * @param rev
 	 */
-	public void onSerialReceived(Message rev);
+    void onSerialReceived(Message rev);
 }

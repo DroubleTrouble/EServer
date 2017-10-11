@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Message
 import com.bumptech.glide.Glide
 import com.ly.eserver.R
+import com.ly.eserver.app.Constants
 import com.ly.eserver.presenter.BigPictureActivityPresenter
 import com.ly.eserver.presenter.impl.BigPictureActivityPresenterImpl
 import com.ly.eserver.ui.activity.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_bigpicture.*
-import kotlinx.android.synthetic.main.activity_description.*
 
 /**
  * 显示大图页面
@@ -18,17 +18,15 @@ import kotlinx.android.synthetic.main.activity_description.*
 class BigPictureActivity (override val layoutId: Int = R.layout.activity_bigpicture) :
         BaseActivity<BigPictureActivityPresenterImpl>(), BigPictureActivityPresenter.View {
     var pathPicture : String = ""
-
+    var REQUEST_CODE : Int = 0
     override fun refreshView(mData: Any) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onHandlerReceive(msg: Message) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onBroadcastReceive(context: Context, intent: Intent) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun initData() {
@@ -36,13 +34,27 @@ class BigPictureActivity (override val layoutId: Int = R.layout.activity_bigpict
     }
 
     override fun loadData() {
-        pathPicture = intent.extras.getString("pathPicture")
+        mLoadingPage!!.state = Constants.Companion.STATE_SUCCESS
+        mLoadingPage!!.showPage()
+
     }
 
     override fun initView() {
+        if (intent.extras.get("pathPicture1") != null) {
+            pathPicture = intent.extras.get("pathPicture1") as String
+            REQUEST_CODE = 1
+        }else if (intent.extras.get("pathPicture2") != null){
+            pathPicture = intent.extras.get("pathPicture2") as String
+            REQUEST_CODE = 2
+        }
         Glide.with(this).load("file://"+pathPicture).into(iv_bigpicture_picture)
         ll_bigpicture_delete.setOnClickListener {
-//            startActivity<>()
+            this.setResult(REQUEST_CODE)
+            finish()
+        }
+        ll_bigpicture_back.setOnClickListener {
+            this.setResult(3)
+            finish()
         }
     }
 }
