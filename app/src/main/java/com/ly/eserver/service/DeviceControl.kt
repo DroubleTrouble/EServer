@@ -288,7 +288,7 @@ class DeviceControl(private val mContext: Context) : IrListener, SerialListener,
         }
         Log.i(TAG, MessageFormat.format("Send:{0}", StringUtil.bufferToHex(data)))
         if (!status)
-            ToastUtils.showShort( "数据接口发送失败!"+status)
+            ToastUtils.showShort( "数据接口发送失败!")
     }
 
     override fun onIrReceived(rev: Message) {

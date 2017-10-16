@@ -64,10 +64,9 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
         <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="UH6j7XDAd5psPdH8E95XZlLF7jFP7aSZ"/>
+            android:name="com.amap.api.v2.apikey"
+            android:value="57df078763717c003a24c73e5e96ac0d"/>
         <meta-data
             android:name="Mob-AppKey"
             android:value="1fb5736107964"/>
@@ -84,17 +83,8 @@
                 <category android:name="android.intent.category.default" />
             </intent-filter>
         </service>
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:permission="android.permission.BAIDU_LOCATION_SERVICE"
-            android:process=":remote" >
-            <intent-filter>
-                <action android:name="com.baidu.location.service_v2.2" />
-            </intent-filter>
-        </service>
-         
 
+        <service android:name="com.amap.api.location.APSService"></service>
     </application>
 
 </manifest>

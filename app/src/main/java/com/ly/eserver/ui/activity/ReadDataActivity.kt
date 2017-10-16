@@ -6,7 +6,8 @@ import android.content.Intent
 import android.os.Message
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
-import com.baidu.location.BDLocation
+import com.amap.api.location.AMapLocation
+import com.amap.api.navi.model.AmapCarLocation
 import com.blankj.utilcode.util.ToastUtils
 import com.ly.eserver.R
 import com.ly.eserver.app.Constants
@@ -51,8 +52,7 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
     val REQUEST_TIMEOUT_VALUE: Long = 15 * 1000//请求超时时间
     var operlogDao : OperlogDao = OperlogDao(this@ReadDataActivity)
     var operlog : OperlogBean = OperlogBean()
-    var main_BDlocation: BDLocation? = null
-
+    var amapLocation : AMapLocation? = null
 
     override fun refreshView(mData: Any?) {
         ToastUtils.showShort("发送到服务器成功！")
@@ -102,7 +102,7 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
                     ToastUtils.showShort("请求发送成功")
 //                    mHandler.removeMessages(ON_REQUEST_TIMEOUT)
 //                    progressDialog.dismiss()
-                } catch (ex: Exception) {
+                } catch (ex: Throwable) {
                     ToastUtils.showShort("数据解析失败")
                     result.add("数据解析失败")
                 } finally {
@@ -191,9 +191,9 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         tv_titlebar_title.text = "抄读"
         ll_titlebar_close.visibility = LinearLayout.GONE
         if (intent.extras.get("location").toString() != "") {
-            main_BDlocation = intent.extras.get("location") as BDLocation
-            operlog.address = main_BDlocation!!.locTypeDescription
-            operlog.location = main_BDlocation!!.latitude.toString() + "/" + main_BDlocation!!.longitude.toString()
+            amapLocation = intent.extras.get("location") as AMapLocation
+            operlog.address = amapLocation!!.description
+            operlog.location = amapLocation!!.latitude.toString() + "/" + amapLocation!!.longitude.toString()
         }
         operlog.userid = KotlinApplication.useridApp
         operlog.projectid = KotlinApplication.projectidApp
@@ -208,7 +208,6 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         }
         dataList.add("协议645/07")
         dataList.add("协议645/97")
-        dataList.add("协议376.1")
         adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, dataList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sp_readdata_tableType.adapter = adapter
@@ -236,8 +235,8 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         mContext = this@ReadDataActivity
         // 恢复蓝牙启动状态
         DeviceControl.instance.setBluetoothHandler(KotlinApplication.bind!!)
-        if (DeviceControl.instance.getBluetoothandler() != null) {
-            DeviceControl.instance.getBluetoothandler()!!.service.resume()
+        if (DeviceControl.instance.mBluetooth != null) {
+            DeviceControl.instance.getBluetoothandler().service.resume()
         }
         //启用设备
         if (mDeviceControl == null)

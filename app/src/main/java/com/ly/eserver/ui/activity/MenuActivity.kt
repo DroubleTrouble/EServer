@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Message
 import android.widget.LinearLayout
-import com.baidu.location.BDLocation
+import com.amap.api.location.AMapLocation
 import com.ly.eserver.presenter.MenuActivityPresenter
 import com.ly.eserver.presenter.impl.MenuActivityPresenterImpl
 import com.ly.eserver.ui.activity.base.BaseActivity
@@ -19,13 +19,12 @@ import org.jetbrains.anko.*
  */
 class MenuActivity(override val layoutId: Int = R.layout.activity_menu) : BaseActivity<MenuActivityPresenterImpl>(),
         MenuActivityPresenter.View {
-    var main_BDlocation : BDLocation? = null
-
+    var amapLocation : AMapLocation? = null
     override fun refreshView(mData: String) {
         if (mData != ""){
             info("MenuActivity = Qiniu" + mData)
-            if (main_BDlocation != null)
-                startActivity<DescriptionActivity>("Qiniu" to mData , "location" to main_BDlocation!!)
+            if (amapLocation != null)
+                startActivity<DescriptionActivity>("Qiniu" to mData , "location" to amapLocation!!)
             else
                 startActivity<DescriptionActivity>("Qiniu" to mData , "location" to "")
         }
@@ -49,19 +48,22 @@ class MenuActivity(override val layoutId: Int = R.layout.activity_menu) : BaseAc
         tv_titlebar_title.text = "菜单"
         ll_titlebar_back.visibility = LinearLayout.GONE
         if (intent.extras.get("location").toString() != "") {
-            main_BDlocation = intent.extras.get("location") as BDLocation
+            amapLocation = intent.extras.get("location") as AMapLocation
         }
     }
 
     override fun initView() {
         tv_menu_readdata.setOnClickListener {
-            if (main_BDlocation != null)
-                startActivity<ReadDataActivity>( "location" to main_BDlocation!!)
+            if (amapLocation != null)
+                startActivity<ReadDataActivity>( "location" to amapLocation!!)
             else
                 startActivity<ReadDataActivity>( "location" to "")
         }
         tv_menu_pushreport.setOnClickListener {
             mPresenter.getQiniu()
+        }
+        ll_titlebar_close.setOnClickListener {
+            finish()
         }
     }
 

@@ -3,11 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccent">
-    <com.baidu.mapapi.map.MapView
-    android:id="@+id/mv_menuContent_map"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:clickable="true" />
+    <com.amap.api.maps.MapView
+        android:id="@+id/mv_menuContent_map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
     <LinearLayout
         android:id="@+id/ll_menucontent_startdata"
         android:layout_alignParentBottom="true"
@@ -32,13 +31,4 @@
             android:textSize="@dimen/sp_18"
             android:text="@string/startreaddata"/>
     </LinearLayout>
-    <ImageView
-        android:id="@+id/iv_menuContent_location"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:src="@drawable/location2"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginBottom="@dimen/dp_16"
-        android:layout_above="@+id/ll_menucontent_startdata"
-        />
 </RelativeLayout>

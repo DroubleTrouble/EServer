@@ -5,7 +5,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Message
 import android.widget.LinearLayout
-import com.baidu.location.BDLocation
+import com.amap.api.location.AMapLocation
+import com.amap.api.navi.model.AmapCarLocation
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.ly.eserver.R
@@ -15,16 +16,16 @@ import com.ly.eserver.bean.DescriptionBean
 import com.ly.eserver.presenter.DescriptionActivityPresenter
 import com.ly.eserver.presenter.impl.DescriptionActivityPresenterImpl
 import com.ly.eserver.ui.activity.base.BaseActivity
+import com.qiniu.android.common.FixedZone
+import com.qiniu.android.storage.Configuration
+import com.qiniu.android.storage.UploadManager
 import com.yuyh.library.imgsel.ImageLoader
 import com.yuyh.library.imgsel.ImgSelActivity
 import com.yuyh.library.imgsel.ImgSelConfig
 import kotlinx.android.synthetic.main.activity_description.*
 import kotlinx.android.synthetic.main.item_titlebar.*
-import org.jetbrains.anko.*
-import com.qiniu.android.storage.UploadManager
-import com.qiniu.android.common.FixedZone
-import com.qiniu.android.storage.Configuration
-import com.qiniu.android.storage.UpCompletionHandler
+import org.jetbrains.anko.info
+import org.jetbrains.anko.startActivityForResult
 import java.util.*
 
 /**
@@ -43,7 +44,7 @@ class DescriptionActivity (override val layoutId: Int = R.layout.activity_descri
     lateinit var key : String
     lateinit var uploadManager : UploadManager
     var description : DescriptionBean = DescriptionBean()
-    var main_BDlocation : BDLocation? = null
+    var amapLocation : AMapLocation? = null
 
     override fun refreshView(mData: Any?) {
         ToastUtils.showShort("发送成功")
@@ -65,7 +66,7 @@ class DescriptionActivity (override val layoutId: Int = R.layout.activity_descri
         mLoadingPage!!.showPage()
         QiniuToken = intent.extras.getString("Qiniu")
         if (intent.extras.get("location").toString() != "") {
-            main_BDlocation = intent.extras.get("location") as BDLocation
+            amapLocation = intent.extras.get("location") as AMapLocation
         }
         tv_titlebar_title.text = "提交报告"
         ll_titlebar_back.visibility = LinearLayout.GONE
@@ -111,8 +112,8 @@ class DescriptionActivity (override val layoutId: Int = R.layout.activity_descri
                         description.picture2 = Constants.QINIU_API +keylist[1]
                     }
                 }
-                if (main_BDlocation != null)
-                    description.location = main_BDlocation!!.latitude.toString() + "/" +main_BDlocation!!.longitude.toString()
+                if (amapLocation != null)
+                    description.location = amapLocation!!.latitude.toString() + "/" +amapLocation!!.longitude.toString()
                 description.userid = KotlinApplication.useridApp
                 description.projectid = KotlinApplication.projectidApp
                 description.description = et_description_description.text.toString()
