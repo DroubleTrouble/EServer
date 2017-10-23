@@ -1,31 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <include
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_48"
-        layout="@layout/item_titlebar" />
+        android:background="@color/colorLightBlue">
+
+        <LinearLayout
+            android:id="@+id/ll_readdata_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:contentDescription="TODO"
+                android:src="@drawable/back" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_readdata_send"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:text="@string/smssdk_submit"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_16"
         android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_16"
-        android:text="@string/table_address" />
 
-    <EditText
-        android:id="@+id/ed_readdata_tableAddress"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
-        android:background="@drawable/form_border"
-        android:gravity="center_vertical"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/sp_18" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="@string/table_address" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:gravity="center_vertical"
+            android:background="@drawable/form_border">
+            <EditText
+                android:id="@+id/ed_readdata_tableAddress"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/dp_48"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_18" />
+            <LinearLayout
+                android:id="@+id/ll_readdata_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:src="@drawable/scan" />
+            </LinearLayout>
+        </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,6 +97,7 @@
             android:gravity="center_vertical"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/sp_18" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,6 +113,7 @@
             android:text="正向有功电能"
             android:textColor="@color/colorBlackGray"
             android:textSize="@dimen/sp_18" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,14 +128,15 @@
             android:gravity="start|top"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/sp_18" />
+
         <Button
             android:id="@+id/bt_readdata_startreaddata"
             android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
             android:layout_marginTop="@dimen/dp_16"
             android:background="@drawable/shape"
             android:text="@string/startreaddata"
-            android:textSize="@dimen/sp_18"
             android:textColor="@color/colorWhite"
-            android:layout_height="@dimen/dp_48" />
+            android:textSize="@dimen/sp_18" />
     </LinearLayout>
 </LinearLayout>

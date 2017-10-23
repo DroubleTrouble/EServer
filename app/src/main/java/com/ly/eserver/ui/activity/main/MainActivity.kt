@@ -33,6 +33,10 @@ import com.amap.api.maps.*
 import com.amap.api.location.AMapLocation
 import com.ly.eserver.ui.activity.MenuActivity
 import com.ly.eserver.ui.activity.ReimbursementActivity
+import com.ly.eserver.service.BluetoothService
+import com.ly.eserver.service.DeviceControl
+
+
 
 
 /**
@@ -94,8 +98,8 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
                 ToastUtils.showShort("签到成功！")
                 tv_profile_check.text = "今日已签到"
                 check.userid = user.userid!!
-//                check.address = main_BDlocation!!.locationDescribe
-//                check.location = main_BDlocation!!.latitude.toString() + "/" + main_BDlocation!!.longitude.toString()
+                check.address = amapLocation!!.description
+                check.location = amapLocation!!.latitude.toString() + "/" + amapLocation!!.longitude.toString()
                 check.ischeck = true
                 check.time = Date(System.currentTimeMillis())
                 mPresenter.insertCheck(check)
@@ -142,17 +146,11 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
         if (bluetooth.isEnabled) {
             iv_menuContent_bluetooth.setImageResource(R.drawable.close_bluet)
         }
-        ll_menucontent_startdata.setOnClickListener {
-
-            if (!bluetooth.isEnabled) {
-                ToastUtils.showShort("蓝牙未开启,请打开蓝牙设备!")
-                startActivity<BlueToothActivity>()
+        ll_menucontent_start.setOnClickListener {
+            if (amapLocation != null) {
+                startActivity<MenuActivity>("location" to amapLocation!!)
             } else {
-                if (amapLocation != null) {
-                    startActivity<MenuActivity>("location" to amapLocation!!)
-                } else {
-                    startActivity<MenuActivity>("location" to "")
-                }
+                startActivity<MenuActivity>("location" to "")
             }
         }
     }

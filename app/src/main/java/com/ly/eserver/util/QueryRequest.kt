@@ -8,6 +8,7 @@ import com.ly.eserver.protocol.MeterQueryInfo
 import com.ly.eserver.protocol.collector.ahi.Collector_AHI_Util
 import com.ly.eserver.protocol.dlt645.DLT645_Parse
 import com.ly.eserver.protocol.dlt645.dlt64507.DLT645_2007
+import com.ly.eserver.protocol.dlt645.dlt64507.DLT645_2007_Info
 import com.ly.eserver.protocol.dlt645.dlt64597.DLT645_1997
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -65,16 +66,20 @@ class QueryRequest :AnkoLogger{
      * @return
      */
     fun parse07Data(data: ByteArray): List<String> {
-        var data = data
+        var result :ArrayList<String>? = null
         //获取07表报文数据标识
-        val dataFlag = Collector_AHI_Util.converBytesToStr(
-                Collector_AHI_Util.get07DataFlag(data, HAVE_METER_ADDR), "").toUpperCase(Locale.CHINA)
+        val dateNoAddr = DLT645_2007.getDataInfo(data)
+        val dataFlag = DLT645_2007.getDataFlag(dateNoAddr.resultData,4)
+        val tempDataFlag = byteArrayOf(0x00.toByte(), 0x01.toByte(), 0xFF.toByte(), 0x00.toByte())
+//        info("QueryRequest data: "+ StringUtil.bufferToHex(dataFlag))
+//        info("QueryRequest data: "+ StringUtil.bufferToHex(tempDataFlag))
+        if (Arrays.equals(dataFlag, tempDataFlag)) {
+            //获取数据
+            val queryInfo = MeterQueryInfo("正向有功电能", 0, 1)
+            result = DLT645_2007.parse(queryInfo, dateNoAddr.resultData) as ArrayList<String>
 
-        //获取数据
-        data = Collector_AHI_Util.get07Data(data, HAVE_METER_ADDR)
-        val queryInfo = MeterQueryInfo("正向有功电能", 0, 0)
-        val result = DLT645_2007.parse(queryInfo,data) as ArrayList<String>
-        return result
+        }
+        return result!!
     }
 
     /**
@@ -85,17 +90,19 @@ class QueryRequest :AnkoLogger{
      * @return
      */
     fun parse97Data(data: ByteArray): List<String> {
-        var data = data
-        //获取97表报文数据标识
-        val dataFlag = Collector_AHI_Util.converBytesToStr(
-                Collector_AHI_Util.get97DataFlag(data, HAVE_METER_ADDR), "").toUpperCase(Locale.CHINA)
-
-        //获取97数据区(不包含表计地址与数据标识)
-        data = Collector_AHI_Util.get97Data(data, HAVE_METER_ADDR)
-        //获取当前选择的表计类型(水表/气表/热表)(均为有线),开始解析数据
-        val queryInfo = MeterQueryInfo("正向有功电能", 0, 0)
-        val result = DLT645_1997.parse(queryInfo,data) as ArrayList<String>
-        return result
+        var result :ArrayList<String>? = null
+        //获取07表报文数据标识
+        val dateNoAddr = DLT645_1997.getDataInfo(data)
+        val dataFlag = DLT645_1997.getDataFlag(dateNoAddr.resultData,2)
+        val tempDataFlag = byteArrayOf(0x10.toByte(), 0x90.toByte())
+//        info("QueryRequest data: "+ StringUtil.bufferToHex(dataFlag))
+//        info("QueryRequest data: "+ StringUtil.bufferToHex(tempDataFlag))
+        if (Arrays.equals(dataFlag, tempDataFlag)) {
+            //获取数据
+            val queryInfo = MeterQueryInfo("正向有功电能", 0, 1)
+            result = DLT645_1997.parse(queryInfo, dateNoAddr.resultData) as ArrayList<String>
+        }
+        return result!!
     }
 
 }

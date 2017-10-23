@@ -1,5 +1,6 @@
 package com.ly.eserver.ui.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -23,11 +24,17 @@ import com.ly.eserver.ui.widgets.ProgressDialog
 import com.ly.eserver.util.ParseUtil
 import com.ly.eserver.util.QueryRequest
 import com.ly.eserver.util.StringUtil
+import com.ly.eserver.util.StringUtils
+import com.xys.libzxing.zxing.activity.CaptureActivity
 import kotlinx.android.synthetic.main.activity_readdata.*
-import kotlinx.android.synthetic.main.item_titlebar.*
-import org.jetbrains.anko.info
+import org.jetbrains.anko.*
+import org.jetbrains.anko.startActivityForResult
 import java.nio.ByteBuffer
 import java.util.*
+import android.support.v4.app.NotificationCompat.getExtras
+import android.os.Bundle
+
+
 
 /**
  * 抄读数据页面
@@ -102,17 +109,21 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
                     ToastUtils.showShort("请求发送成功")
 //                    mHandler.removeMessages(ON_REQUEST_TIMEOUT)
 //                    progressDialog.dismiss()
-                } catch (ex: Throwable) {
-                    ToastUtils.showShort("数据解析失败")
-                    result.add("数据解析失败")
-                } finally {
-                    hideProgressDialog()
-                    mHandler.removeMessages(ON_REQUEST_TIMEOUT)
                     tv_readdata_readResult.text = result.toString().substring(1, result.toString().length-1)
                     operlog.tableAddress = ed_readdata_tableAddress.text.toString()
                     operlog.result = result.toString().substring(1, result.toString().length-1)
                     operlog.isfinish = true
+                    operlog.issended = false
                     operlogDao.saveOperlog(operlog)
+                } catch (ex: Throwable) {
+                    ToastUtils.showShort("数据解析失败")
+                    result.add("数据解析失败")
+                    tv_readdata_readResult.text = result.toString().substring(1, result.toString().length-1)
+
+                } finally {
+                    hideProgressDialog()
+                    mHandler.removeMessages(ON_REQUEST_TIMEOUT)
+
                 }
             }
             ON_DIALOG_DELAY_DISMISS -> {//
@@ -188,8 +199,6 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
     override fun loadData() {
         mLoadingPage!!.state = Constants.Companion.STATE_SUCCESS
         mLoadingPage!!.showPage()
-        tv_titlebar_title.text = "抄读"
-        ll_titlebar_close.visibility = LinearLayout.GONE
         if (intent.extras.get("location").toString() != "") {
             amapLocation = intent.extras.get("location") as AMapLocation
             operlog.address = amapLocation!!.description
@@ -202,8 +211,8 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
 
     override fun initView() {
         mContext = this@ReadDataActivity
-
-        ll_titlebar_back.setOnClickListener {
+        ll_readdata_send.visibility = LinearLayout.GONE
+        ll_readdata_back.setOnClickListener {
             finish()
         }
         dataList.add("协议645/07")
@@ -212,20 +221,24 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sp_readdata_tableType.adapter = adapter
 
+        ll_readdata_scan.setOnClickListener {
+            startActivityForResult<CaptureActivity>(0)
+        }
+
         bt_readdata_startreaddata.setOnClickListener {
             operlog.time = Date(System.currentTimeMillis())//获取当前时间
             operlog.type = sp_readdata_tableType.selectedItem.toString()
             tv_readdata_readResult.text = ""
-//            DeviceControl.instance.changeRateParityStop(RateType.RATE_2400, ParityType.EVEN,StopBitType.STOP_1)
             mHandler.sendEmptyMessage(ON_READ_REQUEST)
         }
         val list  = operlogDao.queryOperlog()
         if (list != null) {
             for (item in list) {
-                info("list------------"+item.toString())
-                mPresenter.insertOperlog(item)
                 item.issended = true
+                item.isfinish = true
+                mPresenter.insertOperlog(item)
                 operlogDao.saveOperlog(item)
+
             }
         }
     }
@@ -237,7 +250,7 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         DeviceControl.instance.setBluetoothHandler(KotlinApplication.bind!!)
         if (DeviceControl.instance.mBluetooth != null) {
             DeviceControl.instance.getBluetoothandler().service.resume()
-        }
+    }
         //启用设备
         if (mDeviceControl == null)
             mDeviceControl = DeviceControl.instance
@@ -254,5 +267,13 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
         mDeviceControl!!.unregisterDeviceListener(this)
 
     }
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode === Activity.RESULT_OK) {
+            val bundle = data!!.getExtras()
+            val scanResult = bundle.getString("result")
+            val temp = scanResult.substring(scanResult.length-9,scanResult.length)
+            ed_readdata_tableAddress.setText(temp)
+        }
+    }
 }

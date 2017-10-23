@@ -430,6 +430,7 @@ class BluetoothService : Service() ,AnkoLogger {
                     val status = if (msg.obj != null) msg.obj as Boolean else false
                     if (status) {
                         ToastUtils.showShort("蓝牙连接成功")
+
                     } else {
                         ToastUtils.showShort("蓝牙连接失败")
                         //发起下次连接尝试(重新搜索)

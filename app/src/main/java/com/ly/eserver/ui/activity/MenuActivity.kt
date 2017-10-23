@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Message
 import android.widget.LinearLayout
 import com.amap.api.location.AMapLocation
+import com.blankj.utilcode.util.ToastUtils
 import com.ly.eserver.presenter.MenuActivityPresenter
 import com.ly.eserver.presenter.impl.MenuActivityPresenterImpl
 import com.ly.eserver.ui.activity.base.BaseActivity
@@ -54,10 +55,15 @@ class MenuActivity(override val layoutId: Int = R.layout.activity_menu) : BaseAc
 
     override fun initView() {
         tv_menu_readdata.setOnClickListener {
-            if (amapLocation != null)
-                startActivity<ReadDataActivity>( "location" to amapLocation!!)
-            else
-                startActivity<ReadDataActivity>( "location" to "")
+            if (checkDeviceStatus()) {
+                if (amapLocation != null)
+                    startActivity<ReadDataActivity>( "location" to amapLocation!!)
+                else
+                    startActivity<ReadDataActivity>( "location" to "")
+            } else {
+                ToastUtils.showShort("前往配置蓝牙连接")
+                startActivity<BlueToothActivity>()
+            }
         }
         tv_menu_pushreport.setOnClickListener {
             mPresenter.getQiniu()

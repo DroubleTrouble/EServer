@@ -178,7 +178,7 @@ class DeviceControl(private val mContext: Context) : IrListener, SerialListener,
         val queryRate = deviceSet.getInt(BluetoothSet.QUERY_RATE, RateType.RATE_2400.value)
         //抄读校验,默认偶校验
         val queryParity = deviceSet.getInt(BluetoothSet.QUERY_PARITY, ParityType.EVEN.value.toInt())
-        info("toggle,queryRate   queryParity"+queryRate+ "    "+queryParity)
+//        info("toggle,queryRate   queryParity"+queryRate+ "    "+queryParity)
 
         when (queryDevice) {
             Constants.QUERY_INFRARED -> if (status) {

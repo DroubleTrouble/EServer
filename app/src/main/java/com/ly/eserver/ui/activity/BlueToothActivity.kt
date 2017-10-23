@@ -74,6 +74,7 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
         ll_titlebar_close.visibility = LinearLayout.GONE
     }
 
+    @SuppressLint("ApplySharedPref")
     override fun initView() {
         ll_titlebar_back.setOnClickListener {
             finish()
@@ -332,7 +333,6 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
                                     .commit()
                             //建立蓝牙连接(预连接,设置窗口关闭后后建立真实连接)
                             val handler: BluetoothService.BluetoothBinder? = DeviceControl.instance.getBluetoothandler()
-                            info("handler" + handler.toString())
                             if (handler != null) {
                                 val socket: BluetoothSocket
                                 try {
@@ -405,6 +405,4 @@ class BlueToothActivity(override val layoutId: Int = R.layout.activity_bluetooth
             }
         }
     }
-
-
 }

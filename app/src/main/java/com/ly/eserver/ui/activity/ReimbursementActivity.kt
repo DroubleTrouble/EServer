@@ -86,6 +86,7 @@ class ReimbursementActivity(override val layoutId: Int = R.layout.activity_reimb
                 personlog.others = ed_reimbursement_others.text.toString().toDouble()    //其它费用
 
             startActivity<PersonLogActivity>("personlog" to personlog)
+            finish()
         }
         ll_titlebar_close.setOnClickListener {
             finish()

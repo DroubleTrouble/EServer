@@ -34,6 +34,7 @@ class PersonLogActivity(override val layoutId: Int = R.layout.activity_personlog
 
     override fun refreshView(mData: Any?) {
         ToastUtils.showShort("提交成功")
+        finish()
     }
 
     override fun initData() {

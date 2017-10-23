@@ -398,7 +398,29 @@ public class Collector_AHI_Util {
         }
         return swap(sum(-0x33, data));
     }
-
+    /**
+     * 获取07数据区(不包含表计地址)
+     * @param protocol
+     * @return
+     */
+    public static byte[] get07Data2(byte[] protocol, boolean haveMeterAddr) {
+        int length = protocol.length;
+        byte[] data;
+        if ((getProtocolType(protocol) & 0xF0) != PROTOCOL_TYPE.ERROR) {
+            //非错误返回帧时,包含表计地址
+            if (haveMeterAddr) {
+                data = new byte[length - DATA_WITH_ADDR_INDEX - 2];//数据域不包含数据标识
+                System.arraycopy(protocol, DATA_WITH_ADDR_INDEX + 4, data, 0, data.length);
+            } else {
+                data = new byte[length - DATA_INDEX - 2];//数据域不包含数据标识
+                System.arraycopy(protocol, DATA_INDEX + 4, data, 0, data.length);
+            }
+        } else {
+            data = new byte[length - DATA_INDEX - 2];
+            System.arraycopy(protocol, DATA_INDEX, data, 0, data.length);
+        }
+        return swap(sum(-0x33, data));
+    }
     /**
      * 获取97数据区(不包含表计地址与数据标识)
      *

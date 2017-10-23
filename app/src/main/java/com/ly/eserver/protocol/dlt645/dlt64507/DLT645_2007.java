@@ -10,6 +10,7 @@ import com.ly.eserver.protocol.exception.ParameterFormatException;
 import com.ly.eserver.protocol.exception.ProtocolDataTypeException;
 import com.ly.eserver.protocol.exception.ProtocolIdException;
 import com.ly.eserver.util.ParseUtil;
+import com.ly.eserver.util.StringUtil;
 
 import java.nio.ByteBuffer;
 import java.text.MessageFormat;
@@ -646,6 +647,7 @@ public class DLT645_2007 extends DLT645_Parse {
     public static List<String> parse(MeterQueryInfo queryInfo, byte[] data)
             throws PacketLengthException, ProtocolIdException, ProtocolDataTypeException {
         List<String> ret = new ArrayList<String>();
+        Log.e("parse",data.length+"");
         if (data.length <= DATA_FLAG_LEN) {
             ret.add("数据报文异常");
             return ret;

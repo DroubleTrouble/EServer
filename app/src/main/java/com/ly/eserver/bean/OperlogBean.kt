@@ -15,8 +15,8 @@ data class OperlogBean constructor(
         var location: String? = null, //定位：200.101
         var address: String? = null, //地址，江苏省南京市鼓楼区
         var type: String? = null, //协议类型
-        var isfinish: Boolean = false, //是否完成
+        var isfinish: Boolean? = null, //是否完成
         var result: String? = null, //抄读结果
-        var issended : Boolean = false, //是否已发送到服务器
+        var issended : Boolean? = null, //是否已发送到服务器
         var time: Date? = null   //时间：YYYY-MM-DD:HH-MM-SS
 ) : Serializable

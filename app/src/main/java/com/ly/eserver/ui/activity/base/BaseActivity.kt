@@ -140,7 +140,6 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
      * @return
      */
     fun checkDeviceStatus(): Boolean {
-        if (this.getSharedPreferences(SET_NAME, Context.MODE_PRIVATE).getInt(BluetoothSet.QUERY_DEVICE, -1) == Constants.QUERY_BLUETOOTH) {
             val bluetooth = BluetoothAdapter.getDefaultAdapter()
             if (bluetooth.isEnabled) {
                 //蓝牙开启
@@ -166,10 +165,11 @@ abstract class BaseActivity<T : BasePresenter<*>> : AppCompatActivity(), LifeSub
             } else {
                 ToastUtils.showShort("未开启蓝牙,请开启蓝牙设备")
             }
-        } else {
-            //非蓝牙设备不需要检测
-            return true
-        }
+
+//        } else {
+//            //非蓝牙设备不需要检测
+//            return true
+//        }
         return false
     }
 

@@ -57,7 +57,9 @@ class ChangePwdActivity(override val layoutId: Int = R.layout.activity_changepwd
             finish()
         }
         iv_changepwd_next.setOnClickListener {
-            if (et_changepwd_newpwd.text.toString() != et_changepwd_configpwd.text.toString()) {
+            if(et_changepwd_newpwd.text.toString().length< 6 ){
+                ToastUtils.showShort("密码至少六位")
+            }else if (et_changepwd_newpwd.text.toString() != et_changepwd_configpwd.text.toString()) {
                 ToastUtils.showShort("请确认两次输入的密码是否一致")
             } else {
                 //获取工号，密码，验证密码是否正确

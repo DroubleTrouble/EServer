@@ -19,6 +19,9 @@ import com.yanzhenjie.permission.PermissionNo
 import com.yanzhenjie.permission.PermissionYes
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.*
+import com.ly.eserver.util.EncryptUtil
+
+
 
 
 /**
@@ -27,6 +30,7 @@ import org.jetbrains.anko.*
  */
 class LoginActivity(override val layoutId: Int = R.layout.activity_login) : BaseActivity<LoginActivityPresenterImpl>(),
         LoginActivityPresenter.View {
+    var userBean : UserBean = UserBean()
     override fun onHandlerReceive(msg: Message) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -34,11 +38,10 @@ class LoginActivity(override val layoutId: Int = R.layout.activity_login) : Base
     override fun onBroadcastReceive(context: Context, intent: Intent) {
     }
 
-    var userBean : UserBean = UserBean()
     override fun refreshView(mData: UserBean) {
 //        保存到数据库中
         val userDao : UserDao = UserDao(this)
-//        info("LoginActivity  "+ mData.toString())
+        info("LoginActivity  "+ mData.password)
         userDao.saveUser(mData)
         KotlinApplication.useridApp = mData.userid!!
         KotlinApplication.projectidApp = mData.projectid!!
@@ -55,7 +58,8 @@ class LoginActivity(override val layoutId: Int = R.layout.activity_login) : Base
         mLoadingPage!!.showPage()
         if (SharedPreferencesUtil.getInt(this, "user","userid") != 0 )
             et_login_userid.setText(SharedPreferencesUtil.getInt(this, "user","userid").toString())
-        et_login_password.setText(SharedPreferencesUtil.getString(this, "user","password"))
+        val tpassword = EncryptUtil.desDecryptText(SharedPreferencesUtil.getString(this, "user","password"))
+        et_login_password.setText(tpassword)
     }
 
     override fun initView() {
@@ -68,8 +72,10 @@ class LoginActivity(override val layoutId: Int = R.layout.activity_login) : Base
         iv_login_next.setOnClickListener {
             userBean.userid = et_login_userid.text.toString().toInt()
             userBean.password = et_login_password.text.toString()
-            //使用SharedPreferences 保存用户信息
-            SharedPreferencesUtil.putUser(this, userBean.userid!!, userBean.password!!)
+            val strAfterDesDecryptPass = EncryptUtil.desEncryptText(userBean.password!!.toUpperCase())
+            info("传递用户名和密码=======>" + userBean.userid + "====>" + userBean.password + "=====>" + strAfterDesDecryptPass)
+            //使用SharedPreferences 保存用户信息 保存加密的密码
+            SharedPreferencesUtil.putUser(this, userBean.userid!!, strAfterDesDecryptPass)
             mPresenter.login(userBean)
         }
     }

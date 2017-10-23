@@ -71,6 +71,13 @@ public class DLT645_Parse {
         return ParseUtil.Swap(dataFlag);
     }
 
+    public static byte[] removeAddr(byte[] data) throws PacketLengthException {
+
+        byte[] newData = new byte[data.length - 10];
+        System.arraycopy(data, 10, newData, 0, newData.length);
+        return newData;
+
+    }
     /**
      * 获得数据域
      *
@@ -87,6 +94,7 @@ public class DLT645_Parse {
         System.arraycopy(dataResult, dataFlagLen, dataField, 0, dataField.length);
         return ParseUtil.Swap(dataField);
     }
+
 
     /**
      * 移除报文头的FE数据

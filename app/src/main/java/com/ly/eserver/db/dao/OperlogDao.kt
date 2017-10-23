@@ -82,7 +82,6 @@ class OperlogDao(var mContext: Context){
         return operlogBeans
     }
 
-
     /**
      * 保存数据到数据库中
      * */

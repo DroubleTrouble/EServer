@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Message
 import android.widget.LinearLayout
 import com.amap.api.location.AMapLocation
-import com.amap.api.navi.model.AmapCarLocation
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.ly.eserver.R
@@ -129,6 +128,7 @@ class DescriptionActivity (override val layoutId: Int = R.layout.activity_descri
             if (!pathList.isEmpty()) {
                 info("iv_description_picture1" + pathList.get(0) )
                 startActivityForResult<BigPictureActivity>(REQUEST_PIC1, "pathPicture1" to pathList.get(0))
+
             }
         }
         iv_description_picture2.setOnClickListener {

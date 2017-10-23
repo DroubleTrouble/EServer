@@ -12,7 +12,7 @@
     <string name="verify_code">验证码</string>
     <string name="bluetooth">蓝牙连接</string>
     <string name="openbluetooth">开启蓝牙连接</string>
-    <string name="startreaddata">开始抄读</string>
+    <string name="start">选择菜单</string>
     <string name="work_log">工作日志</string>
     <string name="my_task">我的任务</string>
     <string name="no_check">今日未签到</string>
@@ -53,5 +53,6 @@
     <string name="data_identification">数据标识</string>
     <string name="read_result">抄读结果</string>
     <string name="delete">删除</string>
+    <string name="startreaddata">开始抄读</string>
 
 </resources>
