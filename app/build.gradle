@@ -91,6 +91,7 @@ dependencies {
     compile name: 'SMSSDK-3.0.0', ext: 'aar'
     compile name: 'SMSSDKGUI-3.0.0', ext: 'aar'
     implementation files('libs/AMap3DMap_5.4.0_AMapNavi_5.4.0_AMapSearch_5.3.1_AMapLocation_3.6.0_20170929.jar')
+    implementation project(':cretinautoupdatelibrary')
 }
 
 //Manifest中的版本和library中引用的recyclerview版本不一样，需要在gradle中将其强制转换成相同的版本。

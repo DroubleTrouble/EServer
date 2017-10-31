@@ -11,11 +11,14 @@ import android.os.IBinder
 import android.support.multidex.MultiDex
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
-import com.ly.eserver.bean.UserBean
+import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils
 import com.ly.eserver.service.BluetoothService
 import com.ly.eserver.service.DeviceControl
 import com.ly.eserver.util.BluetoothSet
 import com.mob.MobApplication
+
+
+
 
 /**
  * Created by zengwendi on 2017/6/12.
@@ -23,6 +26,7 @@ import com.mob.MobApplication
 
 class KotlinApplication : MobApplication() {
     companion object {
+        @SuppressLint("StaticFieldLeak")
         private var instance: Application? = null
         var useridApp : Int = 0
         var projectidApp : Int = 0
@@ -33,6 +37,9 @@ class KotlinApplication : MobApplication() {
         super.onCreate()
         Utils.init(this)
         instance = this
+
+        CretinAutoUpdateUtils.init("http://192.168.1.204:8080/eserver/apk/version");
+
         // 开启蓝牙服务
         val service = Intent(this@KotlinApplication, BluetoothService::class.java)
         bindService(service, bluetoothServiceConn, Context.BIND_AUTO_CREATE)

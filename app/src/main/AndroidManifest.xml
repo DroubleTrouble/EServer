@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <!--地图权限-->
-    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
@@ -35,6 +35,8 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:name="com.ly.eserver.app.KotlinApplication"
         android:allowBackup="true"
@@ -43,11 +45,12 @@
         android:roundIcon="@mipmap/logo_icons"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoBar">
-        <activity android:name=".ui.activity.LoginActivity">
+
+        <activity android:name=".ui.activity.LoginActivity" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
         <activity android:name="com.ly.eserver.ui.activity.main.MainActivity" />
         <activity android:name=".ui.activity.ChangePwdActivity" />
@@ -64,12 +67,24 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!--these codes-->
+        <service android:name="com.cretin.www.cretinautoupdatelibrary.utils.DownloadService"/>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.ly.eserver.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="57df078763717c003a24c73e5e96ac0d"/>
+            android:value="57df078763717c003a24c73e5e96ac0d" />
         <meta-data
             android:name="Mob-AppKey"
-            android:value="1fb5736107964"/>
+            android:value="1fb5736107964" />
         <meta-data
             android:name="Mob-AppSecret"
             android:value="5476e1761a6f2505040f4566ff2f3870" />

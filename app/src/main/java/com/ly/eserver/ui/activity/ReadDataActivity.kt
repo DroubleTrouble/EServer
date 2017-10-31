@@ -174,7 +174,7 @@ class ReadDataActivity(override val layoutId: Int = R.layout.activity_readdata) 
     }
 
     override fun onDeviceReceiver(rev: Message?): Boolean {
-        info("onDeviceReceiver:" + StringUtil.bufferToHex(rev!!.obj as ByteArray?))
+        info("onDeviceReceiver:" + StringUtil.bufferToHex(rev!!.obj as ByteArray))
         if (rev.obj is ByteArray) {
             var response: ByteArray? = null
             //根据当前选择的表计类型获取数据集

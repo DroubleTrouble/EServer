@@ -14,6 +14,7 @@ import shinetechzz.com.vcleaders.presenter.base.BasePresenter
  */
 class LoginActivityPresenterImpl :BasePresenter<LoginActivityPresenter.View>(),
         LoginActivityPresenter.Presenter, AnkoLogger {
+
     override fun login(userBean: UserBean) {
         val listener = object : HttpOnNextListener<UserBean>() {
             override fun onNext(t: Any?) {

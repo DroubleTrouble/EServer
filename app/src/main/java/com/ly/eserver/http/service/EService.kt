@@ -2,6 +2,7 @@ package com.ly.eserver.http.service
 
 import com.ly.eserver.bean.*
 import io.reactivex.Observable
+import okhttp3.RequestBody
 import retrofit2.http.*
 import java.util.*
 
@@ -46,4 +47,10 @@ interface EService {
 
     @POST("check/insert")
     fun insertCheck(@Body checkBean: CheckBean) : Observable<DataBean<CheckBean>>
+
+    @GET("eserver.apk")
+    fun download() : Observable<RequestBody>
+
+    @GET("apk/version")
+    fun getVersion() : Observable<DataBean<VersionBean>>
 }

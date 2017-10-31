@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Message
+import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils
 import com.ly.eserver.R
 import com.ly.eserver.app.Constants
 import com.ly.eserver.app.KotlinApplication
@@ -13,15 +14,14 @@ import com.ly.eserver.presenter.LoginActivityPresenter
 import com.ly.eserver.presenter.impl.LoginActivityPresenterImpl
 import com.ly.eserver.ui.activity.base.BaseActivity
 import com.ly.eserver.ui.activity.main.MainActivity
+import com.ly.eserver.util.EncryptUtil
 import com.ly.eserver.util.SharedPreferencesUtil
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.PermissionNo
 import com.yanzhenjie.permission.PermissionYes
 import kotlinx.android.synthetic.main.activity_login.*
-import org.jetbrains.anko.*
-import com.ly.eserver.util.EncryptUtil
-
-
+import org.jetbrains.anko.info
+import org.jetbrains.anko.startActivity
 
 
 /**
@@ -31,6 +31,8 @@ import com.ly.eserver.util.EncryptUtil
 class LoginActivity(override val layoutId: Int = R.layout.activity_login) : BaseActivity<LoginActivityPresenterImpl>(),
         LoginActivityPresenter.View {
     var userBean : UserBean = UserBean()
+    lateinit var tpassword : String
+
     override fun onHandlerReceive(msg: Message) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -58,12 +60,15 @@ class LoginActivity(override val layoutId: Int = R.layout.activity_login) : Base
         mLoadingPage!!.showPage()
         if (SharedPreferencesUtil.getInt(this, "user","userid") != 0 )
             et_login_userid.setText(SharedPreferencesUtil.getInt(this, "user","userid").toString())
-        val tpassword = EncryptUtil.desDecryptText(SharedPreferencesUtil.getString(this, "user","password"))
-        et_login_password.setText(tpassword)
+        if(SharedPreferencesUtil.getString(this, "user","password") != null){
+            tpassword = EncryptUtil.desDecryptText(SharedPreferencesUtil.getString(this, "user","password")!!)
+            et_login_password.setText(tpassword)
+        }
     }
 
     override fun initView() {
         getPermission()
+        CretinAutoUpdateUtils.getInstance(this).check()
         //忘记密码
         tv_login_forgetpwd.setOnClickListener{
             startActivity<RetrievePwdActivity>("userid" to et_login_userid.text.toString().toInt())
@@ -125,5 +130,6 @@ class LoginActivity(override val layoutId: Int = R.layout.activity_login) : Base
         info("失败")
 
     }
+
 
 }
